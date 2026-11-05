@@ -7,7 +7,7 @@
 <link rel="icon" href="data:,"/>
 <title>Google TV Settings Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"></noscript>
 <style>
   :root{
     --bg:#07080b; --outer:#0b0c10; --panel:#14161c; --panel2:#1a1d26; --panel3:#1e212c;
@@ -131,33 +131,47 @@
   /* stage row: TV screen with the Google TV remote beside it */
   .stage-row{display:flex;gap:14px;align-items:flex-start}
   .stage-row .tv-shell{flex:1;min-width:0}
-  .remote-panel{flex:0 0 252px;position:sticky;top:12px}
-  @media(max-width:900px){ .stage-row{flex-direction:column} .stage-row .tv-shell{width:100%} .remote-panel{flex:none;width:100%;position:static} }
+  .remote-panel{flex:0 0 300px;position:sticky;top:12px}
+  @media(max-width:900px){ .stage-row{flex-direction:column} .stage-row .tv-shell{width:100%} .remote-panel{flex:none;width:100%;position:static} .remote-photo{max-height:70vh} }
   #catCard{margin-bottom:14px}
   /* Google TV remote — big, high contrast, every key labeled */
   .remote{background:#101116;border:2px solid #4a4f57;border-radius:28px;padding:20px 16px 18px;display:flex;flex-direction:column;align-items:center;gap:14px;box-shadow:0 16px 38px rgba(0,0,0,.55)}
   .remote-title{font-size:16px;font-weight:700;color:#fff;text-align:center}
+  .remote-select-label{display:block;font-size:12.5px;color:#bdc1c6;font-weight:700;margin:10px 2px 6px}
+  .remote-select{width:100%;box-sizing:border-box;background:#1c1f28;border:1px solid #5f6368;border-radius:10px;color:#e8eaed;padding:10px 12px;font-family:inherit;font-size:14px}
+  .remote-photo-wrap{position:relative;display:grid;place-items:center;padding:14px 6px 4px}
+  .remote-photo{max-height:600px;max-width:100%;border-radius:12px;background:#fff;display:block}
+  .remote-photo-box{position:relative;display:inline-block;line-height:0}
+  .remote-hot{position:absolute;width:15%;height:4.6%;transform:translate(-50%,-50%);border-radius:50%;border:2px solid transparent;background:rgba(255,255,255,0);cursor:pointer;padding:0}
+  .remote-hot:hover{background:rgba(26,115,232,.38);border-color:#8ab4f8;box-shadow:0 0 0 2px rgba(138,180,248,.35)}
+  .remote-hot:focus-visible{outline:2px solid #8ab4f8;outline-offset:1px;background:rgba(26,115,232,.25)}
+  .remote-hot:active{background:rgba(26,115,232,.55);border-color:#8ab4f8}
+  .remote-hot[data-key="ok"]{width:17%;height:5.2%}
+  .remote-hot[data-key="power"]{width:13%;height:4%}
+  /* extra labelled keys (Settings, Input, Voice, Menu, Options, Mute, numbers) */
+  .remote-xkeys{width:100%;border-top:1px solid #2e3342;padding-top:12px}
+  .remote-xkeys-label{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#80868b;font-weight:700;text-align:center;margin:0 0 8px}
+  .xkey-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center}
+  .xkey{appearance:none;border:1px solid #5f6368;background:#1c1f28;color:#e8eaed;border-radius:999px;padding:7px 12px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit}
+  .xkey:hover{border-color:#8ab4f8;background:#1e2a45}
+  .xkey:active{background:#1a73e8;border-color:#1a73e8;color:#fff}
+  .xkey-num{min-width:34px;padding:7px 0;text-align:center}
+  /* button guide: what every key on the remote does */
+  .remote-guide{width:100%;border-top:1px solid #2e3342;padding-top:12px;text-align:left}
+  .remote-guide h3{margin:0 0 4px;font-size:14px;color:#fff;text-align:center}
+  .remote-guide .g-sub{margin:0 0 10px;font-size:12px;color:#9aa0a6;text-align:center;line-height:1.5}
+  .g-row{display:flex;gap:10px;padding:7px 2px;border-top:1px solid #232630}
+  .g-row:first-of-type{border-top:0}
+  .g-row b{flex:0 0 104px;font-size:12.5px;color:#e8eaed;line-height:1.45}
+  .g-row span{flex:1;font-size:12.5px;color:#bdc1c6;line-height:1.5}
+  .g-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;border-radius:999px;padding:1px 7px;margin-left:6px;vertical-align:1px}
+  .g-tag.works{background:#137333;color:#fff}
+  .g-tag.ref{background:#3c4043;color:#dadce0}
+  .remote-note{margin:0;width:100%;font-size:12.5px;color:#bdc1c6;text-align:center;line-height:1.5;background:#1a1d26;border:1px solid #2e3342;border-radius:10px;padding:9px 11px}
+  .remote-meta{font-size:13.5px;line-height:1.55;color:#dadce0;text-align:center;padding:2px 6px}
+  .remote-meta span{color:#bdc1c6}
+  .remote-notused{margin:10px 2px 0;color:#9aa0a6;font-size:12.5px;line-height:1.55;text-align:center}
   .remote-sub{margin:-6px 0 0;font-size:12.5px;color:#bdc1c6;text-align:center;line-height:1.45}
-  .r-power{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;border:2px solid #5f6368;background:#202124;color:#fff;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
-  .r-power-ico{color:#f28b82;font-size:17px;line-height:1}
-  .r-power:active{background:#a50e0e;border-color:#a50e0e}
-  .dpad{width:200px;height:200px;border-radius:50%;background:#202124;border:2px solid #5f6368;position:relative;display:grid;place-items:center}
-  .dpad button{position:absolute;width:62px;height:62px;border-radius:50%;border:2px solid #5f6368;background:#2f3136;color:#fff;cursor:pointer;font-size:21px;display:grid;place-items:center;font-family:inherit}
-  .dpad button:active{background:#1a73e8;border-color:#8ab4f8}
-  .dpad .up{top:7px;left:50%;transform:translateX(-50%)}
-  .dpad .down{bottom:7px;left:50%;transform:translateX(-50%)}
-  .dpad .left{left:7px;top:50%;transform:translateY(-50%)}
-  .dpad .right{right:7px;top:50%;transform:translateY(-50%)}
-  .dpad .ok{position:relative;width:70px;height:70px;background:#fff;color:#202124;font-weight:800;font-size:17px;border-color:#fff;z-index:1}
-  .dpad .ok:active{background:#8ab4f8}
-  .remote-row{display:flex;gap:10px;width:100%}
-  .remote-row button{flex:1;padding:13px 8px;border-radius:999px;border:2px solid #5f6368;background:#202124;color:#fff;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit}
-  .remote-row button:active{background:#1a73e8;border-color:#8ab4f8}
-  .r-vol{width:100%;border:2px solid #5f6368;border-radius:18px;padding:10px;display:flex;flex-direction:column;gap:8px;background:#17181d}
-  .r-vol-label{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#bdc1c6;font-weight:700;text-align:center}
-  .r-vol button{padding:12px;border-radius:12px;border:2px solid #5f6368;background:#202124;color:#fff;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit}
-  .r-vol button:active{background:#1a73e8;border-color:#8ab4f8}
-  .remote-note{margin:10px 2px 0;color:#9aa0a6;font-size:12.5px;line-height:1.55;text-align:center}
   /* standby screen + volume on-screen display, inside the TV frame */
   .standby{position:absolute;inset:0;background:#000;z-index:8;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;text-align:center;padding:20px}
   .standby[hidden]{display:none}
@@ -195,6 +209,8 @@
   /* Real TV photos view: give the capture a much bigger stage */
   .tv-screen.photo-on{aspect-ratio:auto;height:min(94vh,1120px)}
   @media(max-width:720px){ .tv-screen.photo-on{min-height:86vh} }
+  /* Home start stage: grow to fit the photo, caption, and action buttons, so the Next button is never clipped */
+  .tv-screen.home-on{aspect-ratio:auto;height:auto}
   .cap-btn{background:#e8eaed;color:#202124;border:0;border-radius:999px;padding:4px 11px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit;flex-shrink:0}
   .cap-btn:hover{background:#fff}
   /* full-screen enlarged real capture */
@@ -442,6 +458,69 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
   .search-top-label{color:#174ea6}
   .search-others-label{color:#5f6368}
 }
+
+/* Tab layout preview: three tabs at the top, one shared twin. */
+.tabbar{display:flex;gap:8px;margin:0 0 14px;flex-wrap:wrap}
+.tabbar button{padding:10px 18px;border-radius:999px;border:2px solid #5f6368;background:#17181d;color:#e8eaed;cursor:pointer;font-weight:700;font-size:15px;font-family:inherit}
+.tabbar button[aria-selected="true"]{background:#1a73e8;border-color:#8ab4f8;color:#fff}
+body.tab-nav #catCard, body.tab-nav #l1Panel, body.tab-nav #probingPanel{display:none}
+body.tab-top10 #catCard{display:block}
+body.tab-top10 #l1Panel, body.tab-top10 #probingPanel, body.tab-top10 .stage-row, body.tab-top10 #liveStateCard{display:none}
+body.tab-top10 .wrap{display:block}
+body.tab-tss #catCard, body.tab-tss #liveStateCard, body.tab-tss #probingPanel{display:none}
+body.tab-probing #catCard, body.tab-probing .stage-row, body.tab-probing #l1Panel, body.tab-probing #liveStateCard{display:none}
+body.tab-nav .wrap, body.tab-probing .wrap{display:block}
+@media (min-width:980px){
+  body.tab-tss .wrap{display:grid;grid-template-columns:minmax(0,1fr) 430px;gap:14px;align-items:start}
+  body.tab-tss .tabbar{grid-column:1/-1}
+  body.tab-tss #l1Panel{margin-top:0}
+  body.tab-tss .page-foot{grid-column:1/-1}
+}
+/* Probing tab */
+.probe-flow{border:1px solid #262a36;border-radius:12px;padding:14px;margin:14px 0;background:#17181d}
+.probe-flow h3{margin:0 0 4px}
+.probe-flow h3 small{color:#9aa0a6;font-weight:400}
+.probe-q{margin:10px 0}
+.probe-q p{margin:4px 0}
+.home-stage{margin-bottom:12px}
+.home-stage img{width:100%;display:block;border-radius:12px}
+.home-cap{font-size:13.5px;color:#9aa0a6;margin:10px 2px 0;line-height:1.5}
+.home-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+/* Remote replica draft: RC923 */
+.r-mic{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:999px;border:2px dashed #5f6368;background:#17181d;color:#9aa0a6;font-size:15px;font-weight:700;cursor:not-allowed;font-family:inherit}
+.remote .r-unused{padding:12px;border-radius:12px;border:2px dashed #5f6368;background:#17181d;color:#9aa0a6;cursor:not-allowed;font-weight:700;font-size:15px;font-family:inherit}
+
+/* Polish pass + Links & review (build 2026.11.02-remote-fix2 follow-up):
+   consistent focus, 44px touch targets on the main controls, no sideways
+   scroll, and one combined links + Argon review prompt section. */
+:focus-visible{outline:2px solid #8ab4f8;outline-offset:2px}
+.tabbar button,.btn,.foot-link,.report-btn,.reset-btn,.path-btn,.cat-btn,.trend-btn,.search-hit,.dw-btn{min-height:44px}
+.cat-btn,.sym-btn{min-height:44px}
+html,body{overflow-x:hidden}
+.wrap,.stage-row,.tv-shell,.card{min-width:0}
+.links-review{margin-top:14px}
+.links-review h2{margin:0;font-size:17px;line-height:1.25}
+.links-review .lr-sub{margin:6px 0 0;color:#9aa0a6;font-size:13.5px;line-height:1.6}
+.links-list{display:grid;gap:8px;margin-top:14px}
+.link-row{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:#171922;border:1px solid #262a36;border-radius:10px;padding:10px 12px}
+.link-row b{font-size:14px;flex:0 0 190px;line-height:1.35}
+.link-row span{flex:1 1 220px;min-width:0;font-size:13px;color:#9aa0a6;line-height:1.5}
+.link-row a{color:#8ab4f8;font-weight:700;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere;word-break:break-word;display:inline-flex;align-items:center;min-height:44px;padding:4px 2px}
+.link-row a:hover{color:#aecbfa}
+.lr-prompt-head{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;margin-top:20px}
+.lr-prompt-head h3{margin:0;font-size:15px;line-height:1.3}
+.lr-copy-status{font-size:13px;color:#81c995;font-weight:600}
+.prompt-box{margin:12px 0 0;background:#171922;border:1px solid #262a36;border-radius:12px;padding:14px 16px;font-family:inherit;font-size:13.5px;line-height:1.65;color:#e8eaed;white-space:pre-wrap;overflow-wrap:break-word;word-break:break-word;max-height:520px;overflow:auto}
+@media (prefers-color-scheme: light){
+  :focus-visible{outline-color:#1a73e8}
+  .links-review .lr-sub{color:#5f6368}
+  .link-row{background:#f8f9fa;border-color:#dadce0}
+  .link-row span{color:#5f6368}
+  .link-row a{color:#174ea6}
+  .link-row a:hover{color:#1a73e8}
+  .lr-copy-status{color:#137333}
+  .prompt-box{background:#f8f9fa;border-color:#dadce0;color:#202124}
+}
 </style>
 </head>
 <body>
@@ -465,6 +544,12 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
 </div>
 
 <div class="wrap">
+  <nav class="tabbar" role="tablist" aria-label="Simulator sections">
+    <button type="button" role="tab" data-tab="nav" aria-selected="true">Navigation</button>
+    <button type="button" role="tab" data-tab="tss" aria-selected="false">TSS</button>
+    <button type="button" role="tab" data-tab="probing" aria-selected="false">Probing</button>
+    <button type="button" role="tab" data-tab="top10" aria-selected="false">Top 10</button>
+  </nav>
   <section class="card" id="catCard" aria-label="All 10 top-level categories">
     <h2>All 10 top-level categories</h2>
     <p>Exactly as captured on the main Settings screen. Tap a category to put it on the TV below — the right-hand pane on the TV mirrors the real preview card for whichever row is highlighted.</p>
@@ -481,8 +566,13 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
         </div>
         <div class="head-right">
           <div class="clock" id="clock">1:49 PM</div>
-          <div class="head-meta"><span class="dot"></span> TCL Guest_NEW <span>•</span> <span>Wi-Fi</span></div>
+          <div class="head-meta"><span class="dot"></span> [connected Wi-Fi network] <span>•</span> <span>Wi-Fi</span></div>
         </div>
+      </div>
+      <div class="home-stage" id="homeStage" hidden>
+        <img id="homeImg" alt="Real TV capture: Google TV Home screen" loading="lazy">
+        <div class="home-cap" id="homeCap"></div>
+        <div class="home-actions"><button class="btn primary" id="homeNextBtn" type="button"></button><button class="btn" id="homeBackBtn" type="button">← Back</button></div>
       </div>
       <div class="section-label" id="sectionLabel">General Settings</div>
 
@@ -524,7 +614,7 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
 
       <!-- volume on-screen display, driven by the remote volume keys -->
       <div class="vol-osd" id="volOsd" hidden>
-        <span>Volume</span>
+        <span id="volLabel">Volume</span>
         <div class="vol-bar"><i id="volBarFill"></i></div>
         <b id="volVal">25</b>
       </div>
@@ -532,28 +622,108 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
   </div>
 
   <aside class="remote-panel">
-    <div class="remote" role="group" aria-label="Google TV remote control">
-      <div class="remote-title">Google TV Remote</div>
-      <p class="remote-sub">Drives the TV screen — the same buttons you talk the customer through.</p>
-      <button class="r-power" type="button" data-key="power" aria-label="Power"><span class="r-power-ico">⏻</span> Power</button>
-      <div class="dpad" role="group" aria-label="Navigation pad">
-        <button class="up" type="button" data-key="up" aria-label="Up">▲</button>
-        <button class="left" type="button" data-key="left" aria-label="Left">◀</button>
-        <button class="ok" type="button" data-key="ok" aria-label="OK">OK</button>
-        <button class="right" type="button" data-key="right" aria-label="Right">▶</button>
-        <button class="down" type="button" data-key="down" aria-label="Down">▼</button>
+    <div class="remote" role="group" aria-label="Remote picker">
+      <div class="remote-title">Remote picker</div>
+      <p class="remote-note">For reference only: the remotes pictured here are not tied to any specific TV model. Whichever remote you pick, its buttons control this simulator the same way.</p>
+      <label class="remote-select-label" for="remotePicker">Choose a remote</label>
+      <select class="remote-select" id="remotePicker" aria-label="Choose a remote">
+        <optgroup label="Fire TV (6)">
+          <option value="fire-01-rc827">RC827 — 06-F47T25-LL006</option>
+          <option value="fire-02-21001-000112">21001-000112</option>
+          <option value="fire-03-g0401-000212">G0401-000212</option>
+          <option value="fire-04-21001-000130">21001-000130</option>
+          <option value="fire-05-rc813">RC813 — G0401-000249</option>
+          <option value="fire-06-21001-000167">21001-000167</option>
+        </optgroup>
+        <optgroup label="Google TV and Android TV (9)">
+          <option value="gtv-01-rc813-shared">RC813 — 21001-000099 and 21001-000135</option>
+          <option value="gtv-02-21001-000154">21001-000154</option>
+          <option value="gtv-03-rc802v">RC802V — 06-BTZNYY-SRC802V</option>
+          <option value="gtv-04-21001-000033">21001-000033</option>
+          <option value="gtv-05-rc902n">RC902N — 21001-000022</option>
+          <option value="gtv-06-g0401-000232">G0401-000232</option>
+          <option value="gtv-07-rc716">RC716 — G0401-000239</option>
+          <option value="gtv-08-rc923" selected>RC923 — 21001-000100</option>
+          <option value="gtv-09-21001-000121">21001-000121</option>
+        </optgroup>
+        <optgroup label="Roku TV (7)">
+          <option value="roku-01-rc280">RC280 — Netflix, Disney+, Apple TV+, Prime Video</option>
+          <option value="roku-02-rc280">RC280 — Netflix, Disney+, Global, Google Play</option>
+          <option value="roku-03-rc280">RC280 — Netflix, Disney+, hulu, sling</option>
+          <option value="roku-04-rc580">RC580 — Netflix, Disney+, Global, Google Play</option>
+          <option value="roku-05-rc580">RC580 — Netflix, Disney+, hulu, sling</option>
+          <option value="roku-06-rc580">RC580 — Netflix, ESPN+, hulu, Roku Channel</option>
+          <option value="roku-07-rc580pro">RC580 PRO — 21001-000079</option>
+        </optgroup>
+      </select>
+      <div class="remote-photo-wrap">
+        <div class="remote-photo-box" id="remotePhotoBox">
+          <img class="remote-photo" id="remotePhoto" src="assets/photos/remote-001.png" alt="Manufacturer photo of remote RC923, code 21001-000100">
+          <button class="remote-hot" type="button" data-key="power" aria-label="Power"></button>
+          <button class="remote-hot" type="button" data-key="up" aria-label="Up"></button>
+          <button class="remote-hot" type="button" data-key="down" aria-label="Down"></button>
+          <button class="remote-hot" type="button" data-key="left" aria-label="Left"></button>
+          <button class="remote-hot" type="button" data-key="right" aria-label="Right"></button>
+          <button class="remote-hot" type="button" data-key="ok" aria-label="OK"></button>
+          <button class="remote-hot" type="button" data-key="back" aria-label="Back"></button>
+          <button class="remote-hot" type="button" data-key="home" aria-label="Home"></button>
+          <button class="remote-hot" type="button" data-key="volup" aria-label="Volume up"></button>
+          <button class="remote-hot" type="button" data-key="voldown" aria-label="Volume down"></button>
+        </div>
       </div>
-      <div class="remote-row">
-        <button type="button" data-key="back">↩ Back</button>
-        <button type="button" data-key="home">⌂ Home</button>
+      <div class="remote-meta" id="remoteMeta">
+        <b>RC923</b><br>
+        <span>Code: 21001-000100</span><br>
+        <span>Remark: backlite. Suggested replacement in sheet: 21001-000121.</span><br>
+        <span>App keys: Netflix, Prime Video, YouTube, TCL Channel, TCL Home, Apple TV.</span>
       </div>
-      <div class="r-vol" role="group" aria-label="Volume keys">
-        <span class="r-vol-label">Volume</span>
-        <button type="button" data-key="volup" aria-label="Volume up">＋ Volume up</button>
-        <button type="button" data-key="voldown" aria-label="Volume down">－ Volume down</button>
+      <p class="remote-notused" id="remoteNotUsed">Printed on this remote, for reference (see the button guide below): Input/source, profile, voice, settings, TV/guide, menu, channel, TV Plus, 123, info, and the app keys.</p>
+
+      <div class="remote-xkeys" aria-label="More remote keys">
+        <p class="remote-xkeys-label">More keys — tap one to see what it does</p>
+        <div class="xkey-row">
+          <button class="xkey" type="button" data-x="settings">Settings</button>
+          <button class="xkey" type="button" data-x="input">Input</button>
+          <button class="xkey" type="button" data-x="voice">Voice</button>
+          <button class="xkey" type="button" data-x="menu">Menu</button>
+          <button class="xkey" type="button" data-x="options">Options</button>
+          <button class="xkey" type="button" data-x="mute">Mute</button>
+        </div>
+        <div class="xkey-row" style="margin-top:6px" aria-label="Number keys">
+          <button class="xkey xkey-num" type="button" data-num="1">1</button>
+          <button class="xkey xkey-num" type="button" data-num="2">2</button>
+          <button class="xkey xkey-num" type="button" data-num="3">3</button>
+          <button class="xkey xkey-num" type="button" data-num="4">4</button>
+          <button class="xkey xkey-num" type="button" data-num="5">5</button>
+          <button class="xkey xkey-num" type="button" data-num="6">6</button>
+          <button class="xkey xkey-num" type="button" data-num="7">7</button>
+          <button class="xkey xkey-num" type="button" data-num="8">8</button>
+          <button class="xkey xkey-num" type="button" data-num="9">9</button>
+          <button class="xkey xkey-num" type="button" data-num="0">0</button>
+        </div>
       </div>
+
+      <div class="remote-guide" aria-label="What the remote buttons do">
+        <h3>What the buttons do</h3>
+        <p class="g-sub">Every key you will see on these remotes, in plain words. <b>Works here</b> means the key drives this simulator. <b>Reference</b> means it is explained, but the photo key is not clickable.</p>
+        <div class="g-row"><b>Power</b><span>Turns the TV on, or puts it in standby (off).<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Up / Down / Left / Right</b><span>The direction pad. Moves the highlight around the screen. Left and Right also change sliders and switches. On the Home screen, Right walks the path toward Settings and Left steps back.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>OK</b><span>The round button in the middle of the direction pad. Opens or confirms whatever is highlighted.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Back</b><span>Goes back one screen. Press it again to keep going back.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Home</b><span>Jumps straight back to the Google TV Home screen, from anywhere. In this simulator it restarts the path into Settings.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Settings</b><span>The gear button. Opens the Settings menu directly, without going through the Home screen first. Use the Settings key above: it opens Settings here.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Menu</b><span>Opens the menu for the screen or app you are in. While watching TV it often brings up quick picture and sound options. Tap Menu above to see this note again.<i class="g-tag ref">Reference</i></span></div>
+        <div class="g-row"><b>Options</b><span>Extra choices for whatever is highlighted. On Roku remotes this is the star key. Inside Settings, OK opens the same choices, so use OK here.<i class="g-tag ref">Reference</i></span></div>
+        <div class="g-row"><b>Input</b><span>Switches what the TV shows: HDMI 1, HDMI 2, HDMI 3, AV, or live TV. Pick the port the device is plugged into. Use the Input key above: it opens External Inputs here.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Voice</b><span>The microphone button (Google Assistant). Hold it and speak to search shows and apps, open settings, or control the TV hands-free. The remote must be paired by Bluetooth for voice to work. Voice itself is not simulated.<i class="g-tag ref">Reference</i></span></div>
+        <div class="g-row"><b>Volume up / down</b><span>Volume + makes the sound louder, Volume − makes it quieter. Watch the volume bar on the TV. On Roku remotes and a few others the volume keys sit on the side of the remote, so they are not on the front of the photo.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Mute</b><span>Silences the sound at once. Press it again to bring the sound back at the same volume. Use the Mute key above: it mutes the TV here.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Channel up / down</b><span>Moves live TV one channel at a time. Channel keys do nothing inside Settings menus.<i class="g-tag ref">Reference</i></span></div>
+        <div class="g-row"><b>Partner buttons</b><span>The branded app keys near the bottom of the remote (Netflix, Prime Video, YouTube, Disney+ and others). Each partner pays for its key. One press opens that app from anywhere. Apps are not part of this simulator.<i class="g-tag ref">Reference</i></span></div>
+        <div class="g-row"><b>Number buttons</b><span>0 to 9. On live TV, type a channel number to jump straight to that channel. Numbers also type PINs and codes on entry screens. They are not used inside Settings menus. Tap a number above to see this note again.<i class="g-tag ref">Reference</i></span></div>
+      </div>
+
     </div>
-    <p class="remote-note">Works with mouse, keyboard, and this remote. On a phone, tap a row once to focus it, tap again to open it.</p>
   </aside>
   </div>
 
@@ -610,11 +780,87 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
     </div>
   </section>
 
-  <div class="card" style="margin-top:14px">
+  <section class="card" id="probingPanel" hidden aria-label="Probing questions">
+    <h2>Probing questions</h2>
+    <p>Ask these before you pick a flow, or while you walk one. Each question links to its flow in the TSS tab. Twin state right now: <strong id="probeState">—</strong></p>
+    <div id="probeList"></div>
+  </section>
+
+  <div class="card" id="liveStateCard" style="margin-top:14px">
     <h2>Live state in the simulator</h2>
     <p>HDMI Control: <strong id="wcCEC">—</strong> · eARC: <strong id="wcEarc">—</strong><br><span style="font-size:12.5px">Settings → Channels &amp; Inputs → External Inputs → HDMI (CEC). Turn HDMI Control off and the eARC row greys out, like the real TV.</span></p>
     <p>Audio Output: <strong id="wcAudio">—</strong><br><span style="font-size:12.5px">Captured default is Auto (Internal Speaker), with 8 options including HDMI ARC/eARC, Optical, and Bluetooth. Changing it updates the readouts on the Audio Output Settings screen.</span></p>
   </div>
+
+  <section class="card links-review" id="linksPanel" aria-label="Links and review prompt">
+    <h2>Links &amp; review</h2>
+    <p class="lr-sub">The links to use, and the old links to avoid, in one place. The live link is the one to share with the team. This preview is a separate build, and the live build does not have this preview's Home start, tabs, or remote photo hotspots yet.</p>
+    <div class="links-list">
+      <div class="link-row">
+        <b>Live simulator</b>
+        <span>Published build 2026.11.05, the speed-fix build. This is the team link.</span>
+        <a href="https://damaldastcl-dotcom.github.io/tcl-google-tv-simulator/" target="_blank" rel="noopener">damaldastcl-dotcom.github.io/tcl-google-tv-simulator</a>
+      </div>
+      <div class="link-row">
+        <b>This preview</b>
+        <span>Preview build only. It has no public link, so there is nothing here to share. It opens from its preview card in the team chat. Send the team the live link above instead.</span>
+      </div>
+      <div class="link-row">
+        <b>Source repo on GitHub</b>
+        <span>Public source for the live build: index.html, README.md, and the photos the page loads on demand.</span>
+        <a href="https://github.com/damaldastcl-dotcom/tcl-google-tv-simulator" target="_blank" rel="noopener">github.com/damaldastcl-dotcom/tcl-google-tv-simulator</a>
+      </div>
+      <div class="link-row">
+        <b>Do not use: old links</b>
+        <span>Dead or frozen, shown as plain text so nobody opens or shares them by mistake. Both links under the old thepodemail-lgtm account are dead, because both repos were deleted November 2. The old Muse public link is frozen on a pre-analytics build and is not current.</span>
+        <span style="overflow-wrap:anywhere">https://thepodemail-lgtm.github.io/tcl-google-tv-simulator/ and https://thepodemail-lgtm.github.io/grokbot-gtv-simulator/</span>
+        <span>Use the live simulator link above instead.</span>
+      </div>
+      <div class="link-row">
+        <b>Google TV Help</b>
+        <span>Google's help site for Google TV — the same address the TV prints under Help &amp; Feedback.</span>
+        <a href="https://g.co/tv/help" target="_blank" rel="noopener">g.co/tv/help</a>
+      </div>
+    </div>
+
+    <div class="lr-prompt-head">
+      <h3>Review prompt for Google Argon</h3>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <span class="lr-copy-status" id="argonCopyStatus" role="status"></span>
+        <button class="btn primary" type="button" id="copyArgonPrompt">Copy prompt</button>
+      </div>
+    </div>
+    <p class="lr-sub">Paste the live link into Google Argon together with this prompt, so the review judges the published build on what it is meant to do.</p>
+    <pre class="prompt-box" id="argonPrompt">Review and critique this Google TV simulator.
+
+Live link, the one to review:
+https://damaldastcl-dotcom.github.io/tcl-google-tv-simulator/
+
+Source repo, public:
+https://github.com/damaldastcl-dotcom/tcl-google-tv-simulator
+
+Do NOT use these links, they are dead or frozen:
+- https://thepodemail-lgtm.github.io/tcl-google-tv-simulator/ - dead, repo deleted November 2.
+- https://thepodemail-lgtm.github.io/grokbot-gtv-simulator/ - dead, repo deleted November 2.
+- The old Muse public link - frozen on a pre-analytics build, not current.
+
+Context:
+- This is a behavior twin of TCL Google TV Settings menus, built from real photos of a reference TV.
+- Audience: L1 support agents on phone calls, with no TV in front of them. They guide the customer button by button.
+- This live build is 2026.11.05, a speed fix only. The page is 249 KB with 228 photos loading on demand.
+- Do NOT judge it for missing Home start, tabs, or remote photo hotspots. Those are in a separate preview build, not live yet.
+- In the preview build, check that the Home start buttons (Quick Settings panel, then All settings) stay visible and clickable at desktop and phone widths.
+- The L1 Say scripts, first questions, and Check lines must be polished, clean, plain English, with every link working. The tool must look polished and clean, because it is a valuable tool for the team.
+
+Critique it on:
+1. Usability for an L1 agent on a live call, on desktop and on a phone.
+2. Whether the Settings navigation, toggles, sliders, and flows behave like a real Google TV.
+3. Whether the 17 troubleshooting flows are clear, in plain English, and end with a clear fix or escalation step.
+4. Load speed, layout, and anything broken, confusing, or misleading, including every link in the tool.
+5. What is wrong, ranked by impact, with the exact fix for each item, starting with the highest impact fix first.
+
+Be specific. Name the screen, the button, and the step where it fails. Do not invent features. Do not praise the tool in general terms.</pre>
+  </section>
 
   <footer class="page-foot">
     <span class="page-foot-label">Reference</span>
@@ -622,7 +868,7 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
     <button class="foot-link" type="button" data-refopen="refRevalidation">Revalidation</button>
     <button class="foot-link" type="button" data-refopen="refTreeEnds">Where the tree ends</button>
     <button class="foot-link" type="button" id="flowSourcesLink" data-refopen="refFlowSources" hidden>Flow sources</button>
-    <span class="foot-build" id="buildVersion">Build 2026.11.05</span>
+    <span class="foot-build" id="buildVersion">Build 2026.11.05-polish2</span>
   </footer>
 </div>
 
@@ -711,7 +957,7 @@ body.follow-on .l1-guide-head > div:last-child{display:none}
 
 <script>
 // Build version: bump this to the ship date on every ship. Shown in the tool footer.
-const BUILD_VERSION = "2026.11.05";
+const BUILD_VERSION = "2026.11.05-polish2";
 const buildVersionEl = document.getElementById('buildVersion');
 if(buildVersionEl) buildVersionEl.textContent = "Build " + BUILD_VERSION;
 
@@ -781,7 +1027,7 @@ function sendViaBeacon(payload){
 trackEvent("tool_opened", "");
 
 // Data — verbatim structure from menu-data.json (labels, hierarchy, states, descriptions)
-const RAW = {"items":[{"children":[{"children":[{"children":[{"label":"Country / Region","type":"info","value":"United States"},{"label":"Scan Automatically","type":"action"},{"label":"Manually Scan","type":"action"}],"label":"Channel Scan"},{"label":"Edit Channels","type":"action"},{"label":"Clear Channel List","type":"danger"},{"label":"EPG","note":"Launches Live TV app","type":"action"}],"desc":"Adjust your channel settings and scan for channels.","label":"Channels"},{"children":[{"children":[{"desc":"Allow the TV remote to control compatible HDMI devices (some may not be supported) and the volume of the external soundbar","label":"HDMI Control","state":"on","type":"toggle"},{"desc":"Support for listening to audio via audio strip/receiver connected to HDMI3 (ARC/eARC)","label":"eARC","state":"on","type":"toggle"},{"label":"Power on the TV in sync","state":"off","type":"toggle"},{"label":"Device standby in sync","state":"on","type":"toggle"},{"desc":"When using HDMI devices, all devices except those currently in use are automatically standby; when not using HDMI devices, all are automatically standby","label":"Auto Switch","state":"off","type":"toggle"}],"label":"HDMI (CEC)"},{"desc":"Show this input","label":"HDMI 1","type":"info"},{"desc":"Show this input","label":"HDMI 2","type":"info"},{"desc":"Show this input","label":"HDMI 3 (ARC/eARC)","type":"info"},{"desc":"Show this input","label":"AV","type":"info"}],"desc":"Adjust input settings.","label":"External Inputs"}],"desc":"Adjust channel and input settings","label":"Channels & Inputs"},{"children":[{"children":[{"label":"Picture Mode","type":"select","value":"Standard"},{"label":"Brightness","type":"slider"},{"label":"Contrast","type":"slider"},{"label":"Color","type":"slider"}],"label":"Picture"},{"children":[{"children":[{"label":"Digital Audio Out Delay","type":"slider"},{"label":"Audio Delay","type":"slider"},{"label":"Digital Audio Out","type":"select","value":"PCM"},{"label":"Audio Output","options":["Internal Speaker","Wired Headphone","Internal Speaker + Wired Headphone","Internal Speaker + Subwoofer","Optical","Bluetooth","HDMI ARC/eARC","Auto(Internal Speaker)"],"type":"select","value":"Auto"}],"label":"Audio Output Settings"},{"children":[{"label":"Audio Only Mode","state":"off","type":"toggle"}],"label":"Other Settings"}],"label":"Sound"}],"label":"Display & Sound"},{"children":[{"label":"Wi-Fi","state":"on","type":"toggle"},{"label":"TCL Guest_NEW","type":"info","value":"Connected"},{"label":"See all","type":"action"},{"label":"Add new network","type":"action"},{"label":"Scanning always available","state":"on","type":"toggle"},{"label":"Check Internet Connection","type":"action"}],"desc":"TCL Guest_NEW","label":"Network & Internet"},{"children":[{"desc":"Google Account","label":"Account","type":"info"},{"label":"Add an account","type":"action"},{"label":"Add a kid","type":"action"}],"label":"Accounts & Profiles"},{"children":[{"children":[],"label":"Location","type":"menu"},{"label":"Microphone","state":"on","type":"toggle"},{"label":"Camera","state":"on","type":"toggle"},{"label":"Usage & Diagnostics","state":"on","type":"toggle"},{"children":[],"label":"Ads","type":"menu"}],"label":"Privacy"},{"children":[{"label":"See all apps","type":"action"},{"label":"Manage Updates","type":"action"},{"label":"App permissions","type":"action"},{"label":"Special app access","type":"action"},{"label":"Security","type":"action"},{"label":"Unused apps","type":"action"}],"label":"Apps"},{"children":[{"children":[],"label":"Ambient Screensaver","type":"menu"},{"children":[],"label":"Power & Energy","type":"menu"},{"children":[],"label":"About","type":"menu"},{"children":[],"label":"Date & Time","type":"menu"},{"label":"Language","type":"select","value":"English"},{"label":"Keyboard","type":"info","value":"Gboard"},{"label":"Storage","type":"info"}],"label":"System"},{"children":[{"label":"TalkBack","state":"off","type":"toggle","value":"Off"},{"children":[],"label":"Text to speech","type":"menu"},{"children":[],"label":"Text scaling","type":"menu"},{"label":"Bold text","state":"off","type":"toggle"},{"children":[],"label":"Color correction","type":"menu"}],"label":"Accessibility"},{"children":[{"label":"Bluetooth","state":"on","type":"toggle"},{"label":"Pair accessory","type":"action"},{"label":"Remote Control Pairing","type":"action"},{"label":"Bluetooth Blocklist","type":"action"}],"label":"Remotes & Accessories"},{"children":[{"label":"User Guide","type":"action"},{"label":"Support","type":"action"},{"label":"Send feedback","type":"action"}],"label":"Help & Feedback"}],"section":"GENERAL SETTINGS","title":"Settings"};
+const RAW = {"items":[{"children":[{"children":[{"children":[{"label":"Country / Region","type":"info","value":"United States"},{"label":"Scan Automatically","type":"action"},{"label":"Manually Scan","type":"action"}],"label":"Channel Scan"},{"label":"Edit Channels","type":"action"},{"label":"Clear Channel List","type":"danger"},{"label":"EPG","note":"Launches Live TV app","type":"action"}],"desc":"Adjust your channel settings and scan for channels.","label":"Channels"},{"children":[{"children":[{"desc":"Allow the TV remote to control compatible HDMI devices (some may not be supported) and the volume of the external soundbar","label":"HDMI Control","state":"on","type":"toggle"},{"desc":"Support for listening to audio via audio strip/receiver connected to HDMI3 (ARC/eARC)","label":"eARC","state":"on","type":"toggle"},{"label":"Power on the TV in sync","state":"off","type":"toggle"},{"label":"Device standby in sync","state":"on","type":"toggle"},{"desc":"When using HDMI devices, all devices except those currently in use are automatically standby; when not using HDMI devices, all are automatically standby","label":"Auto Switch","state":"off","type":"toggle"}],"label":"HDMI (CEC)"},{"desc":"Show this input","label":"HDMI 1","type":"info"},{"desc":"Show this input","label":"HDMI 2","type":"info"},{"desc":"Show this input","label":"HDMI 3 (ARC/eARC)","type":"info"},{"desc":"Show this input","label":"AV","type":"info"}],"desc":"Adjust input settings.","label":"External Inputs"}],"desc":"Adjust channel and input settings","label":"Channels & Inputs"},{"children":[{"children":[{"label":"Picture Mode","type":"select","value":"Standard"},{"label":"Brightness","type":"slider"},{"label":"Contrast","type":"slider"},{"label":"Color","type":"slider"}],"label":"Picture"},{"children":[{"children":[{"label":"Digital Audio Out Delay","type":"slider"},{"label":"Audio Delay","type":"slider"},{"label":"Digital Audio Out","type":"select","value":"PCM"},{"label":"Audio Output","options":["Internal Speaker","Wired Headphone","Internal Speaker + Wired Headphone","Internal Speaker + Subwoofer","Optical","Bluetooth","HDMI ARC/eARC","Auto(Internal Speaker)"],"type":"select","value":"Auto"}],"label":"Audio Output Settings"},{"children":[{"label":"Audio Only Mode","state":"off","type":"toggle"}],"label":"Other Settings"}],"label":"Sound"}],"label":"Display & Sound"},{"children":[{"label":"Wi-Fi","state":"on","type":"toggle"},{"label":"[connected Wi-Fi network]","type":"info","value":"Connected"},{"label":"See all","type":"action"},{"label":"Add new network","type":"action"},{"label":"Scanning always available","state":"on","type":"toggle"},{"label":"Check Internet Connection","type":"action"}],"desc":"[connected Wi-Fi network]","label":"Network & Internet"},{"children":[{"desc":"Google Account","label":"Account","type":"info"},{"label":"Add an account","type":"action"},{"label":"Add a kid","type":"action"}],"label":"Accounts & Profiles"},{"children":[{"children":[],"label":"Location","type":"menu"},{"label":"Microphone","state":"on","type":"toggle"},{"label":"Camera","state":"on","type":"toggle"},{"label":"Usage & Diagnostics","state":"on","type":"toggle"},{"children":[],"label":"Ads","type":"menu"}],"label":"Privacy"},{"children":[{"label":"See all apps","type":"action"},{"label":"Manage Updates","type":"action"},{"label":"App permissions","type":"action"},{"label":"Special app access","type":"action"},{"label":"Security","type":"action"},{"label":"Unused apps","type":"action"}],"label":"Apps"},{"children":[{"children":[],"label":"Ambient Screensaver","type":"menu"},{"children":[],"label":"Power & Energy","type":"menu"},{"children":[],"label":"About","type":"menu"},{"children":[],"label":"Date & Time","type":"menu"},{"label":"Language","type":"select","value":"English"},{"label":"Keyboard","type":"info","value":"Gboard"},{"label":"Storage","type":"info"}],"label":"System"},{"children":[{"label":"TalkBack","state":"off","type":"toggle","value":"Off"},{"children":[],"label":"Text to speech","type":"menu"},{"children":[],"label":"Text scaling","type":"menu"},{"label":"Bold text","state":"off","type":"toggle"},{"children":[],"label":"Color correction","type":"menu"}],"label":"Accessibility"},{"children":[{"label":"Bluetooth","state":"on","type":"toggle"},{"label":"Pair accessory","type":"action"},{"label":"Remote Control Pairing","type":"action"},{"label":"Bluetooth Blocklist","type":"action"}],"label":"Remotes & Accessories"},{"children":[{"label":"User Guide","type":"action"},{"label":"Support","type":"action"},{"label":"Send feedback","type":"action"}],"label":"Help & Feedback"}],"section":"GENERAL SETTINGS","title":"Settings"};
 
 // Fix Apps order to match SCREEN-MAP captured order: See all, Unused, Manage, Permissions, Special, Security — keep data order but sort display for root Apps children is handled in data above already reordered for fidelity; original json order preserved elsewhere.
 
@@ -891,7 +1137,7 @@ function deepen(){
 
   // Network: the other saved networks visible on the captured screen
   const net = findNode(rootItems, "Network & Internet");
-  const guestIdx = net.children.findIndex(x=>x.label==="TCL Guest_NEW");
+  const guestIdx = net.children.findIndex(x=>x.label==="[connected Wi-Fi network]");
   net.children.splice(guestIdx+1, 0,
     {label:"Asus2", type:"info", desc:"Secure network"},
     {label:"Asus5", type:"info", desc:"Secure network"});
@@ -1127,7 +1373,7 @@ function deepen2(){
   seeAllNet.type = "menu";
   seeAllNet.children = [
     {label:"Wi-Fi", type:"toggle", state:"on"},
-    {label:"TCL Guest_NEW", type:"info", value:"Connected"},
+    {label:"[connected Wi-Fi network]", type:"info", value:"Connected"},
     {label:"Asus2", type:"info", desc:"Secure network"},
     {label:"Asus5", type:"info", desc:"Secure network"},
     {label:"Add new network", type:"action"}
@@ -1149,17 +1395,17 @@ function deepen2(){
 const HELP_DOCS = {
   "userguide": {
     title: "User Guide",
-    photo: "assets/photos/p001.jpg",
+    photo: "assets/photos/p188.jpg",
     body: "<p>Section: <strong>TCL</strong>, first row of Help &amp; Feedback — exactly as captured above.</p><p>On the real TV this opens TCL’s built-in electronic user guide full-screen: the manual for the TV itself, outside the Settings list. It is a document, not another settings menu, so there are no deeper settings rows under it to capture — this entry screen is the last Settings-level step, and the guide opens from here.</p><p>For a support call: this is where you send a caller who needs the manual. The path to quote is Settings → Help &amp; Feedback → User Guide.</p>"
   },
   "support": {
     title: "Support",
-    photo: "assets/photos/p002.jpg",
+    photo: "assets/photos/p099.jpg",
     body: "<p>Section: <strong>TCL</strong>, second row of Help &amp; Feedback — exactly as captured above.</p><p>On the real TV this opens TCL’s Support flow, outside the Settings list. It does not open another settings submenu, so this entry screen is the deepest Settings-level step for this branch.</p><p>For a support call: Settings → Help &amp; Feedback → Support. Anything past this point is TCL’s support experience, not TV settings.</p>"
   },
   "feedback": {
     title: "Send feedback",
-    photo: "assets/photos/p003.jpg",
+    photo: "assets/photos/p098.jpg",
     body: "<p>Section: <strong>GOOGLE</strong>, the only selectable row under it — exactly as captured above. Below it, the TV prints “Visit Google TV Help at g.co/tv/help” as plain footer text; it is not a button on the real set either.</p><p>On the real TV this opens Google’s feedback flow, where the viewer describes the problem and sends it to Google. It leaves Settings, so there is no deeper settings page under it — this entry screen is the end of the branch.</p><p>For a support call: Settings → Help &amp; Feedback → Send feedback is for Google TV software feedback. Product faults still go through TCL support, not this form.</p>"
   }
 };
@@ -1288,17 +1534,17 @@ const PHOTOS = {
  "accessibility/color correction/grayscale": "assets/photos/p007.jpg",
  "accessibility/color correction/protanomaly": "assets/photos/p008.jpg",
  "accessibility/color correction/tritanomaly": "assets/photos/p009.jpg",
- "accessibility/color correction/use color correction": "assets/photos/p010.jpg",
- "accessibility/talkback": "assets/photos/p011.jpg",
+ "accessibility/color correction/use color correction": "assets/photos/p169.jpg",
+ "accessibility/talkback": "assets/photos/p168.jpg",
  "accessibility/text scaling": "assets/photos/p012.jpg",
  "accessibility/text to speech": "assets/photos/p013.jpg",
  "accounts profiles": "assets/photos/p014.jpg",
  "accounts profiles/add a kid": "assets/photos/p015.jpg",
  "accounts profiles/add an account": "assets/photos/p016.jpg",
- "accounts profiles/account": "assets/photos/p017.jpg",
+ "accounts profiles/account": "assets/photos/p170.jpg",
  "apps": "assets/photos/p018.jpg",
  "apps/app permissions": "assets/photos/p019.jpg",
- "apps/app permissions/contacts": "assets/photos/p020.jpg",
+ "apps/app permissions/contacts": "assets/photos/p172.jpg",
  "apps/app permissions/location": "assets/photos/p021.jpg",
  "apps/app permissions/microphone": "assets/photos/p022.jpg",
  "apps/app permissions/music and audio": "assets/photos/p023.jpg",
@@ -1308,18 +1554,18 @@ const PHOTOS = {
  "apps/app permissions/photos and videos": "assets/photos/p027.jpg",
  "apps/manage updates": "assets/photos/p028.jpg",
  "apps/security": "assets/photos/p029.jpg",
- "apps/see all apps": "assets/photos/p030.jpg",
- "apps/see all apps/google play store": "assets/photos/p031.jpg",
+ "apps/see all apps": "assets/photos/p171.jpg",
+ "apps/see all apps/google play store": "assets/photos/p174.jpg",
  "apps/see all apps/tailscale": "assets/photos/p032.jpg",
  "apps/see all apps/tv": "assets/photos/p033.jpg",
  "apps/special app access": "assets/photos/p034.jpg",
  "apps/unused apps": "assets/photos/p035.jpg",
- "apps/unused apps/0 unused apps": "assets/photos/p036.jpg",
+ "apps/unused apps/0 unused apps": "assets/photos/p173.jpg",
  "channels inputs": "assets/photos/p037.jpg",
- "channels inputs/channels": "assets/photos/p038.jpg",
- "channels inputs/channels/channel scan": "assets/photos/p039.jpg",
- "channels inputs/channels/channel scan/country region": "assets/photos/p040.jpg",
- "channels inputs/channels/channel scan/country/region": "assets/photos/p041.jpg",
+ "channels inputs/channels": "assets/photos/p175.jpg",
+ "channels inputs/channels/channel scan": "assets/photos/p176.jpg",
+ "channels inputs/channels/channel scan/country region": "assets/photos/p178.jpg",
+ "channels inputs/channels/channel scan/country/region": "assets/photos/p178.jpg",
  "channels inputs/channels/channel scan/manually scan": "assets/photos/p042.jpg",
  "channels inputs/channels/channel scan/scan automatically": "assets/photos/p043.jpg",
  "channels inputs/channels/clear channel list": "assets/photos/p044.jpg",
@@ -1330,72 +1576,72 @@ const PHOTOS = {
  "channels inputs/external inputs/hdmi 1/blu ray": "assets/photos/p049.jpg",
  "channels inputs/external inputs/hdmi 1/cable": "assets/photos/p050.jpg",
  "channels inputs/external inputs/hdmi 1/hdmi 1": "assets/photos/p051.jpg",
- "channels inputs/external inputs/hdmi 1/show this input": "assets/photos/p052.jpg",
+ "channels inputs/external inputs/hdmi 1/show this input": "assets/photos/p180.jpg",
  "channels inputs/external inputs/hdmi 2": "assets/photos/p053.jpg",
  "channels inputs/external inputs/hdmi 3 arcearc": "assets/photos/p054.jpg",
- "channels inputs/external inputs/hdmi cec": "assets/photos/p055.jpg",
+ "channels inputs/external inputs/hdmi cec": "assets/photos/p179.jpg",
  "channels inputs/external inputs/hdmi cec/auto switch": "assets/photos/p056.jpg",
  "channels inputs/external inputs/hdmi cec/device standby in sync": "assets/photos/p057.jpg",
  "channels inputs/external inputs/hdmi cec/earc": "assets/photos/p058.jpg",
- "channels inputs/external inputs/hdmi cec/hdmi control": "assets/photos/p059.jpg",
+ "channels inputs/external inputs/hdmi cec/hdmi control": "assets/photos/p181.jpg",
  "channels inputs/external inputs/hdmi cec/playstation 5": "assets/photos/p060.jpg",
  "channels inputs/external inputs/hdmi cec/power on the tv in sync": "assets/photos/p061.jpg",
  "display sound": "assets/photos/p062.jpg",
  "display sound/audio output settings": "assets/photos/p063.jpg",
  "display sound/audio output settings/audio delay": "assets/photos/p064.jpg",
  "display sound/audio output settings/audio output": "assets/photos/p065.jpg",
- "display sound/audio output settings/audio output auto internal speaker": "assets/photos/p066.jpg",
- "display sound/audio output settings/audio output bluetooth": "assets/photos/p067.jpg",
- "display sound/audio output settings/audio output hdmi arcearc": "assets/photos/p068.jpg",
- "display sound/audio output settings/audio output internal speaker": "assets/photos/p069.jpg",
- "display sound/audio output settings/audio output internal speaker subwoofer": "assets/photos/p070.jpg",
- "display sound/audio output settings/audio output internal speaker wired headphone": "assets/photos/p071.jpg",
- "display sound/audio output settings/audio output optical": "assets/photos/p072.jpg",
- "display sound/audio output settings/audio output wired headphone": "assets/photos/p073.jpg",
+ "display sound/audio output settings/audio output auto internal speaker": "assets/photos/p209.jpg",
+ "display sound/audio output settings/audio output bluetooth": "assets/photos/p205.jpg",
+ "display sound/audio output settings/audio output hdmi arcearc": "assets/photos/p206.jpg",
+ "display sound/audio output settings/audio output internal speaker": "assets/photos/p208.jpg",
+ "display sound/audio output settings/audio output internal speaker subwoofer": "assets/photos/p203.jpg",
+ "display sound/audio output settings/audio output internal speaker wired headphone": "assets/photos/p202.jpg",
+ "display sound/audio output settings/audio output optical": "assets/photos/p204.jpg",
+ "display sound/audio output settings/audio output wired headphone": "assets/photos/p207.jpg",
  "display sound/audio output settings/digital audio out": "assets/photos/p074.jpg",
- "display sound/audio output settings/digital audio out delay": "assets/photos/p075.jpg",
- "display sound/audio output settings/digital audio out pcm": "assets/photos/p076.jpg",
- "display sound/picture": "assets/photos/p077.jpg",
+ "display sound/audio output settings/digital audio out delay": "assets/photos/p183.jpg",
+ "display sound/audio output settings/digital audio out pcm": "assets/photos/p210.jpg",
+ "display sound/picture": "assets/photos/p184.jpg",
  "display sound/picture/apply all picture settings": "assets/photos/p078.jpg",
  "display sound/picture/brightness": "assets/photos/p079.jpg",
  "display sound/picture/clarity": "assets/photos/p080.jpg",
  "display sound/picture/color": "assets/photos/p081.jpg",
  "display sound/picture/eye health protection": "assets/photos/p082.jpg",
  "display sound/picture/motion": "assets/photos/p083.jpg",
- "display sound/picture/picture mode": "assets/photos/p084.jpg",
+ "display sound/picture/picture mode": "assets/photos/p184.jpg",
  "display sound/picture/restore defaults": "assets/photos/p085.jpg",
  "display sound/screen settings": "assets/photos/p086.jpg",
  "display sound/screen settings/aspect ratio": "assets/photos/p087.jpg",
  "display sound/screen settings/auto detect": "assets/photos/p088.jpg",
- "display sound/screen settings/overscan": "assets/photos/p089.jpg",
+ "display sound/screen settings/overscan": "assets/photos/p185.jpg",
  "display sound/sound": "assets/photos/p090.jpg",
  "display sound/sound/acoustics laboratory": "assets/photos/p091.jpg",
  "display sound/sound/audio processing": "assets/photos/p092.jpg",
  "display sound/sound/other settings": "assets/photos/p093.jpg",
- "display sound/sound/other settings/audio only mode": "assets/photos/p094.jpg",
+ "display sound/sound/other settings/audio only mode": "assets/photos/p187.jpg",
  "display sound/sound/sound customization": "assets/photos/p095.jpg",
- "display sound/sound/sound mode": "assets/photos/p096.jpg",
+ "display sound/sound/sound mode": "assets/photos/p186.jpg",
  "help feedback": "assets/photos/p097.jpg",
  "help feedback/send feedback": "assets/photos/p098.jpg",
  "help feedback/support": "assets/photos/p099.jpg",
- "help feedback/user guide": "assets/photos/p100.jpg",
+ "help feedback/user guide": "assets/photos/p188.jpg",
  "network internet": "assets/photos/p101.jpg",
  "network internet/add new network": "assets/photos/p102.jpg",
  "network internet/asus2": "assets/photos/p103.jpg",
  "network internet/asus5": "assets/photos/p104.jpg",
  "network internet/check internet connection": "assets/photos/p105.jpg",
  "network internet/scanning always available": "assets/photos/p106.jpg",
- "network internet/see all": "assets/photos/p107.jpg",
+ "network internet/see all": "assets/photos/p201.jpg",
  "network internet/tcl guest new": "assets/photos/p108.jpg",
- "network internet/wi fi": "assets/photos/p109.jpg",
+ "network internet/wi fi": "assets/photos/p189.jpg",
  "privacy": "assets/photos/p110.jpg",
  "privacy/ads": "assets/photos/p111.jpg",
  "privacy/camera": "assets/photos/p112.jpg",
- "privacy/location": "assets/photos/p113.jpg",
+ "privacy/location": "assets/photos/p190.jpg",
  "privacy/microphone": "assets/photos/p114.jpg",
  "privacy/usage diagnostics": "assets/photos/p115.jpg",
  "remotes accessories": "assets/photos/p116.jpg",
- "remotes accessories/bluetooth": "assets/photos/p117.jpg",
+ "remotes accessories/bluetooth": "assets/photos/p191.jpg",
  "remotes accessories/bluetooth blocklist": "assets/photos/p118.jpg",
  "remotes accessories/bt rc923a b1": "assets/photos/p119.jpg",
  "remotes accessories/pair accessory": "assets/photos/p120.jpg",
@@ -1406,17 +1652,17 @@ const PHOTOS = {
  "system/about/legal information": "assets/photos/p125.jpg",
  "system/about/reset": "assets/photos/p126.jpg",
  "system/about/status": "assets/photos/p127.jpg",
- "system/about/system update": "assets/photos/p128.jpg",
- "system/ambient screensaver": "assets/photos/p129.jpg",
+ "system/about/system update": "assets/photos/p193.jpg",
+ "system/ambient screensaver": "assets/photos/p192.jpg",
  "system/date time": "assets/photos/p130.jpg",
  "system/power energy": "assets/photos/p131.jpg",
- "display sound/picture/brightness/brightness": "assets/photos/p132.jpg",
+ "display sound/picture/brightness/brightness": "assets/photos/p194.jpg",
  "display sound/picture/brightness/dynamic brightness": "assets/photos/p133.jpg",
  "display sound/picture/brightness/micro contrast": "assets/photos/p134.jpg",
  "display sound/picture/brightness/black stretch": "assets/photos/p135.jpg",
  "display sound/picture/brightness/dynamic contrast": "assets/photos/p136.jpg",
  "display sound/picture/brightness/dynamic tone mapping": "assets/photos/p137.jpg",
- "display sound/picture/color/color saturation": "assets/photos/p138.jpg",
+ "display sound/picture/color/color saturation": "assets/photos/p195.jpg",
  "display sound/picture/color/tint": "assets/photos/p139.jpg",
  "display sound/picture/color/dynamic color": "assets/photos/p140.jpg",
  "display sound/picture/color/color temperature": "assets/photos/p141.jpg",
@@ -1424,21 +1670,21 @@ const PHOTOS = {
  "display sound/picture/color/color space": "assets/photos/p143.jpg",
  "display sound/picture/color/white balance/2 points": "assets/photos/p144.jpg",
  "display sound/picture/color/white balance/20 points": "assets/photos/p145.jpg",
- "display sound/picture/clarity/sharpness": "assets/photos/p146.jpg",
+ "display sound/picture/clarity/sharpness": "assets/photos/p196.jpg",
  "display sound/picture/clarity/digital noise reduction": "assets/photos/p147.jpg",
  "display sound/picture/clarity/noise reduction": "assets/photos/p148.jpg",
  "display sound/picture/clarity/gradation clear": "assets/photos/p149.jpg",
- "display sound/picture/motion/motion clarity": "assets/photos/p150.jpg",
- "display sound/picture/eye health protection/blue light filter": "assets/photos/p151.jpg",
+ "display sound/picture/motion/motion clarity": "assets/photos/p197.jpg",
+ "display sound/picture/eye health protection/blue light filter": "assets/photos/p198.jpg",
  "display sound/sound/other settings/tv placement": "assets/photos/p152.jpg",
  "display sound/sound/other settings/balance": "assets/photos/p153.jpg",
  "display sound/sound/other settings/dts drc": "assets/photos/p154.jpg",
- "display sound/sound/other settings/audio only mode": "assets/photos/p155.jpg",
- "display sound/sound/acoustics laboratory/auto volume control": "assets/photos/p156.jpg",
+ "display sound/sound/other settings/audio only mode": "assets/photos/p187.jpg",
+ "display sound/sound/acoustics laboratory/auto volume control": "assets/photos/p200.jpg",
  "display sound/sound/sound customization/surround enhance": "assets/photos/p157.jpg",
  "display sound/sound/sound customization/bass": "assets/photos/p158.jpg",
  "display sound/sound/sound customization/voice enhance": "assets/photos/p159.jpg",
- "display sound/sound/sound customization/treble": "assets/photos/p160.jpg",
+ "display sound/sound/sound customization/treble": "assets/photos/p199.jpg",
  "apps/see all apps/browsehere": "assets/photos/p161.jpg",
  "apps/see all apps/disney": "assets/photos/p162.jpg",
  "apps/see all apps/hbo max": "assets/photos/p163.jpg",
@@ -1462,7 +1708,7 @@ const SCREEN_SHOT = {
  "channels inputs/external inputs": "assets/photos/p179.jpg",
  "channels inputs/external inputs/hdmi 1": "assets/photos/p180.jpg",
  "channels inputs/external inputs/hdmi cec": "assets/photos/p181.jpg",
- "display sound": "assets/photos/p182.jpg",
+ "display sound": "assets/photos/p184.jpg",
  "display sound/audio output settings": "assets/photos/p183.jpg",
  "display sound/picture": "assets/photos/p184.jpg",
  "display sound/screen settings": "assets/photos/p185.jpg",
@@ -1651,7 +1897,7 @@ function applyDependencies(){
   const wifi = net && net.children.find(x=>x.label==="Wi-Fi");
   const woff = !!(wifi && wifi.state!=="on");
   if(net){
-    ["TCL Guest_NEW","Asus2","Asus5","See all","Add new network","Check Internet Connection"].forEach(function(l){
+    ["[connected Wi-Fi network]","Asus2","Asus5","See all","Add new network","Check Internet Connection"].forEach(function(l){
       setDisabled(net.children.find(x=>x.label===l), woff, "Unavailable while Wi-Fi is off");
     });
   }
@@ -1705,8 +1951,69 @@ function sliderHTML(item){
   return `<div class="slider-wrap"><div class="slider"><i style="width:${v}%"></i></div><span class="slider-val">${v}</span></div>`;
 }
 
+
+// ---- Home start (build 2026.11.02-home): the Navigation tab opens here, on
+// the real Home photo, not on Settings. Photos load on demand only, from
+// assets/photos/, never inlined. Step 2 lands on the Settings twin with
+// Channels & Inputs focused, exactly as the All settings capture shows.
+const HOME_PHOTOS = {
+  home: "assets/photos/p229.jpg",
+  quick: "assets/photos/p230.jpg",
+  all: "assets/photos/p231.jpg"
+};
+const HOME_STAGE_META = [
+  { photo: HOME_PHOTOS.home, title: "Home", cap: "Home screen: start here. Move right along the top bar to the Quick Settings gear, then press OK.", next: "Quick Settings panel →" },
+  { photo: HOME_PHOTOS.quick, title: "Quick Settings", cap: "Quick Settings panel. Press OK on All settings, at the top right, to open the Settings main menu.", next: "All settings →" }
+];
+let homeStep = 0; // 0 = Home photo, 1 = Quick Settings panel, null = Settings twin
+function renderHomeStage(){
+  const stage = document.getElementById('homeStage');
+  const img = document.getElementById('homeImg');
+  const cap = document.getElementById('homeCap');
+  const nextBtn = document.getElementById('homeNextBtn');
+  const backBtn = document.getElementById('homeBackBtn');
+  const meta = HOME_STAGE_META[homeStep];
+  stage.hidden = false;
+  document.getElementById('tvScreen').classList.add('home-on');
+  if(img.getAttribute('src') !== meta.photo) img.setAttribute('src', meta.photo);
+  img.alt = 'Real TV capture: ' + meta.title;
+  cap.textContent = meta.cap;
+  nextBtn.textContent = meta.next;
+  backBtn.hidden = (homeStep === 0);
+  titleEl.textContent = meta.title;
+  sectionEl.style.display = 'none';
+  document.querySelector('.split').style.display = 'none';
+  document.getElementById('photoStage').hidden = true;
+  crumbsEl.innerHTML = homeStep === 0 ? '<button class="current">Home</button>' : '<button>Home</button><span>›</span><button class="current">Quick Settings</button>';
+  footPath.textContent = homeStep === 0 ? 'Home' : 'Home  ›  Quick Settings';
+}
+function showHome(step){ homeStep = step; closeDialog(); render(); }
+function homeAdvance(){
+  if(homeStep === 0){ homeStep = 1; render(); }
+  else if(homeStep === 1){ enterSettingsFromHome(); }
+}
+function homeBackStep(){
+  if(homeStep === 1){ homeStep = 0; render(); }
+  else if(homeStep === 0){ showToast("You are on the Home screen — press Right or OK to head toward Settings."); }
+}
+document.getElementById('homeNextBtn').addEventListener('click', homeAdvance);
+document.getElementById('homeBackBtn').addEventListener('click', homeBackStep);
+function enterSettingsFromHome(opts){
+  homeStep = null;
+  stack = [{title:"Settings", section:"GENERAL SETTINGS", items: rootItems}];
+  focusIdx = Math.max(0, rootItems.findIndex(function(it){ return it.label === "Channels & Inputs"; }));
+  closeDialog();
+  render();
+  if(!opts || !opts.noScroll) document.getElementById('tvScreen').scrollIntoView({behavior:'smooth', block:'center'});
+}
+
 function render(){
   applyDependencies();
+  if(homeStep !== null){ renderHomeStage(); updateLiveCard(); if(window.refreshLiveLines) window.refreshLiveLines(); return; }
+  document.getElementById('homeStage').hidden = true;
+  document.getElementById('tvScreen').classList.remove('home-on');
+  document.querySelector('.split').style.display = photoMode ? 'none' : '';
+  sectionEl.style.display = photoMode ? 'none' : '';
   const cur = current();
   titleEl.textContent = cur.title;
   sectionEl.textContent = cur.section || (stack.length>1 ? stack.map(s=>s.title).join("  •  ") : "GENERAL SETTINGS");
@@ -1866,6 +2173,8 @@ function renderCatGrid(){
   if(!grid || stack.length!==1 && grid.dataset.done) { /* still allow */ }
   grid.innerHTML = rootItems.map((it,i)=>`<button class="cat-btn" data-cat="${i}"><b>${iconFor(it.label)} &nbsp;${it.label}</b><span>${it.desc|| (it.children? it.children.filter(c=>c.type!=="group" && c.type!=="footer").map(c=>c.label).slice(0,3).join(" • ") : "")}</span></button>`).join('');
   grid.querySelectorAll('[data-cat]').forEach(b=>b.addEventListener('click',()=>{
+    setTab('nav');
+    homeStep = null;
     stack = [{title:"Settings", section:"GENERAL SETTINGS", items: rootItems}];
     focusIdx = +b.dataset.cat;
     render();
@@ -1900,7 +2209,7 @@ function activate(item){
     return;
   }
   if(item.type==="link"){
-    openDialog(`<h3>${item.label}</h3><p>On the real TV this line is printed as footer text under the Google section of Help &amp; Feedback: “Visit Google TV Help at g.co/tv/help”. It is text on the TV, not a settings page — opening it goes to Google TV Help in a browser.</p><div class="dialog-actions"><button class="btn" onclick="closeDialog()">Close</button><a class="btn primary" href="${item.url}" target="_blank" rel="noopener" style="text-decoration:none">Open g.co/tv/help ↗</a></div>`);
+    openDialog(`<h3>${item.label}</h3><p>On the real TV this line is printed as footer text under the Google section of Help &amp; Feedback: “Visit Google TV Help at g.co/tv/help”. It is text on the TV, not a settings page — opening it goes to Google TV Help in a browser.</p><div class="dialog-actions"><button class="btn" onclick="closeDialog()">Close</button><a class="btn primary" href="https://g.co/tv/help" target="_blank" rel="noopener" style="text-decoration:none">Open g.co/tv/help ↗</a></div>`);
     return;
   }
   if(item.children && item.children.length>0){
@@ -2043,8 +2352,7 @@ function goBack(){
   else showToast("Already at Settings — top level");
 }
 function goHome(){
-  stack = [{title:"Settings", section:"GENERAL SETTINGS", items: rootItems}];
-  focusIdx=0; closeDialog(); render(); showToast("Settings — top level");
+  homeStep = 0; closeDialog(); render(); showToast("Home screen — start here");
 }
 function move(dir){
   const items = currentItems();
@@ -2076,6 +2384,14 @@ document.addEventListener('keydown', e=>{
   if(booting){ e.preventDefault(); return; }
   if(window.__refOpen){ if(e.key==="Escape"){ e.preventDefault(); window.__closeRefViews(); } return; }
   if(lightbox.classList.contains('open')){ if(e.key==="Escape"||e.key==="Enter"){ e.preventDefault(); closeLightbox(); } return; }
+  if(homeStep !== null){
+    // Home path is a short walk: Right / Down / Enter move forward toward
+    // Settings, Left / Up / Esc step back. The direction keys must work here
+    // too, not just OK.
+    if(e.key==="Enter" || e.key==="ArrowRight" || e.key==="ArrowDown"){ e.preventDefault(); homeAdvance(); }
+    else if(e.key==="Escape" || e.key==="Backspace" || e.key==="ArrowLeft" || e.key==="ArrowUp"){ e.preventDefault(); homeBackStep(); }
+    return;
+  }
   if(e.key==="ArrowUp"){ e.preventDefault(); move("up"); }
   else if(e.key==="ArrowDown"){ e.preventDefault(); move("down"); }
   else if(e.key==="ArrowLeft"){ e.preventDefault(); adjust("left"); }
@@ -2086,7 +2402,7 @@ document.addEventListener('keydown', e=>{
 
 // remote — the Google TV remote beside the TV screen: D-pad, OK, Back, Home,
 // Power (standby on/off) and volume keys, all driving the simulator.
-let tvOff = false, simVol = 25, volTimer = null;
+let tvOff = false, simVol = 25, volTimer = null, simMuted = false;
 function remotePower(){
   if(booting) return;
   const st = document.getElementById('standby');
@@ -2099,19 +2415,31 @@ function remotePower(){
     showBoot("Starting…", 1500, ()=>{ render(); showToast("TV is on — back on the screen you left"); });
   }
 }
-function remoteVolume(delta){
-  if(tvOff || booting) return;
-  simVol = Math.max(0, Math.min(100, simVol + delta));
+function showVolOsd(){
   const osd = document.getElementById('volOsd');
   const fill = document.getElementById('volBarFill');
   const val = document.getElementById('volVal');
-  if(fill) fill.style.width = simVol + "%";
-  if(val) val.textContent = simVol;
+  const label = document.getElementById('volLabel');
+  if(fill) fill.style.width = simMuted ? "0%" : simVol + "%";
+  if(val) val.textContent = simMuted ? "Muted" : simVol;
+  if(label) label.textContent = simMuted ? "Mute" : "Volume";
   if(osd){
     osd.hidden = false;
     clearTimeout(volTimer);
     volTimer = setTimeout(()=>{ osd.hidden = true; }, 1600);
   }
+}
+function remoteVolume(delta){
+  if(tvOff || booting) return;
+  if(simMuted) simMuted = false; // pressing a volume key brings the sound back
+  simVol = Math.max(0, Math.min(100, simVol + delta));
+  showVolOsd();
+}
+function remoteMute(){
+  if(tvOff || booting) return;
+  simMuted = !simMuted;
+  showVolOsd();
+  showToast(simMuted ? "Muted — press Mute or a volume key to bring the sound back" : "Sound back at volume " + simVol);
 }
 document.querySelectorAll('[data-key]').forEach(btn=>{
   btn.addEventListener('click', ()=>{
@@ -2119,6 +2447,16 @@ document.querySelectorAll('[data-key]').forEach(btn=>{
     const k = btn.dataset.key;
     if(k==="power"){ remotePower(); return; }
     if(tvOff) return;
+    if(homeStep !== null){
+      // Direction pad works on the Home path too: Right / Down move forward
+      // toward Settings (same as OK), Left / Up step back (same as Back).
+      if(k==="ok" || k==="right" || k==="down") homeAdvance();
+      else if(k==="back" || k==="left" || k==="up") homeBackStep();
+      else if(k==="home"){ homeStep = 0; render(); }
+      else if(k==="volup") remoteVolume(5);
+      else if(k==="voldown") remoteVolume(-5);
+      return;
+    }
     if(k==="up") move("up");
     else if(k==="down") move("down");
     else if(k==="left") adjust("left");
@@ -2133,6 +2471,7 @@ document.querySelectorAll('[data-key]').forEach(btn=>{
 
 // quick jumps
 function findPath(labels, opts){
+  homeStep = null;
   // labels: array of labels to follow from root; opts.noScroll skips scrolling the TV into view (follow-along mode)
   let items = rootItems; let newStack = [{title:"Settings", section:"GENERAL SETTINGS", items: rootItems}];
   let idx = 0;
@@ -2349,7 +2688,7 @@ const GALLERY = [
   {path:["Display & Sound"], cap:"Display & Sound panel"},
   {path:["Display & Sound","Picture","Brightness"], cap:"Picture — Brightness"},
   {path:["Display & Sound","Audio Output Settings","Audio Output"], cap:"Audio Output picker"},
-  {path:["Network & Internet","TCL Guest_NEW"], cap:"Network & Internet — connected network"},
+  {path:["Network & Internet","[connected Wi-Fi network]"], cap:"Network & Internet — connected network"},
   {path:["Apps","See all apps","Tailscale"], cap:"App list — Tailscale"},
   {path:["System","About"], cap:"System — About"},
   {path:["Accounts & Profiles","Account"], cap:"Accounts & Profiles"},
@@ -2508,7 +2847,7 @@ function updateCheckFlow(kind){
 
 function internetCheckFlow(){
   const wifi = nodeByPath(["Network & Internet","Wi-Fi"]);
-  const guest = nodeByPath(["Network & Internet","TCL Guest_NEW"]);
+  const guest = nodeByPath(["Network & Internet","[connected Wi-Fi network]"]);
   if(wifi && wifi.state!=="on"){
     openDialog(`<h3>Check Internet Connection</h3><p>The check cannot run: Wi-Fi is off. Turn Wi-Fi on in Network &amp; Internet first, then run the check again.</p><div class="dialog-actions"><button class="btn primary" onclick="closeDialog()">OK</button></div>`);
     return;
@@ -2523,7 +2862,7 @@ function internetCheckFlow(){
     bar.style.width = p + "%";
     if(p >= 100){
       clearInterval(window._flowTimer); window._flowTimer = null;
-      openDialog(`<h3>Connected to the internet</h3><p>Wi-Fi network: <strong>TCL Guest_NEW</strong> (${guest ? liveValueOf(guest) : "Connected"}). The TV can reach the internet, so streaming and updates should work. If an app still fails, the problem is the app or the service, not the connection.</p><div class="dialog-actions"><button class="btn primary" onclick="closeDialog()">Done</button></div>`);
+      openDialog(`<h3>Connected to the internet</h3><p>Wi-Fi network: <strong>[connected Wi-Fi network]</strong> (${guest ? liveValueOf(guest) : "Connected"}). The TV can reach the internet, so streaming and updates should work. If an app still fails, the problem is the app or the service, not the connection.</p><div class="dialog-actions"><button class="btn primary" onclick="closeDialog()">Done</button></div>`);
     }
   }, 110);
 }
@@ -2608,6 +2947,7 @@ function factoryResetFlow(){
 }
 
 function doResetDefaults(){
+  homeStep = null;
   rootItems = buildTree();
   stack = [{title:"Settings", section:"GENERAL SETTINGS", items: rootItems}];
   focusIdx = 0;
@@ -2650,16 +2990,16 @@ const L1_SYMPTOMS = [
       check:"Write down: soundbar make and model, the HDMI port, the TV audio output setting, the digital audio output setting, the sources used, and whether it happens on all content or only some. The ARC history of the case gets built from this list." },
     { path:["Display & Sound","Audio Output Settings","Audio Output"], screen:"Test the TV's own speakers",
       say:"Open Settings, Display and Sound, Audio Output Settings, Audio Output. Choose Internal Speaker for this test and play something. Tell me if the TV speakers make sound.",
-      check:"If the TV speakers fail too, this is a TV audio issue, not an ARC problem. If the speakers work, keep going — you will point Audio Output back at the soundbar in a later step." },
+      check:"If the TV speakers fail too, this is a TV audio issue, not an ARC problem. If the speakers work, keep going. You will point Audio Output back at the soundbar in a later step." },
     { path:["Display & Sound","Audio Output Settings","Digital Audio Out"], screen:"Try each digital audio setting",
       say:"Go back to Audio Output Settings and open Digital Audio Out. We are going to try each setting: Auto, then PCM, then Pass Through. Test the soundbar after each one and tell me which, if any, gives you sound.",
       check:"Write down the result of each setting in the case. Some soundbars only accept one of the three. The live line below shows the setting currently picked in the simulator." },
     { path:["Channels & Inputs","External Inputs","HDMI (CEC)","HDMI Control"], screen:"Check the wiring and HDMI Control",
-      say:"Now the wiring. The soundbar must plug straight into the port on the TV labeled ARC or eARC, into the matching ARC port on the soundbar, with no adapters or splitters in between, and the cable pushed in firmly at both ends. Then open Settings, Channels and Inputs, External Inputs, HDMI (CEC). The first row, HDMI Control, has to be on.",
+      say:"Now the wiring. The soundbar must plug straight into the port on the TV labeled ARC or eARC. It must also plug into the matching ARC port on the soundbar. Use no adapters or splitters in between. Push the cable in firmly at both ends. Then open Settings, Channels and Inputs, External Inputs, HDMI (CEC). The first row, HDMI Control, has to be on.",
       check:"HDMI Control off disables the whole CEC chain, including eARC. Only the ARC/eARC port can send sound back to a soundbar, no matter what the settings say." },
     { path:["Channels & Inputs","External Inputs","HDMI (CEC)","eARC"], screen:"HDMI (CEC), eARC",
       say:"Scroll down one row to eARC. This is the switch that sends the sound to your soundbar. If it is off, press OK to turn it on, then test the soundbar again.",
-      check:"Both HDMI Control and eARC should read On. If the eARC row is greyed out, HDMI Control is off — go back up one row and fix that first." },
+      check:"Both HDMI Control and eARC should read On. If the eARC row is greyed out, HDMI Control is off. Go back up one row and fix that first." },
     { path:["Display & Sound","Audio Output Settings","Audio Output"], screen:"Audio Output must point at the soundbar",
       say:"Press Back until you are at the main Settings screen. Open Display and Sound, then Audio Output Settings, then Audio Output. The option with the dot should be HDMI ARC/eARC. If it is not, scroll to it and press OK, then test.",
       check:"If Audio Output points at Internal Speaker, the TV speakers play and the soundbar stays silent even with eARC on." },
@@ -2668,7 +3008,7 @@ const L1_SYMPTOMS = [
       check:"Use the menu Restart for this step, not the plug. The full power cycle is a separate step, next." },
     { path:null, screen:"Full power cycle, HDMI cable disconnected",
       say:"Turn the TV and the soundbar off. Unplug both of them. Unplug the HDMI cable between them. Wait at least 60 seconds. Then reconnect the HDMI cable, reconnect the power to both, turn them on, and test the sound.",
-      check:"This step keeps the full 60 second wait, with the HDMI cable disconnected, so the ARC handshake starts completely fresh. Time it with the customer — most people reconnect far too fast." },
+      check:"This step keeps the full 60 second wait, with the HDMI cable disconnected, so the ARC handshake starts completely fresh. Time it with the customer. Most people reconnect far too fast." },
     { path:["System","About","System update","Network Update"], screen:"Update the TV software",
       say:"Open Settings, System, About, System update, and choose Network Update. Install anything it finds, let the TV restart, and test the soundbar again.",
       check:"Note the software version before and after in the case. If there is no update waiting, write down the current version instead." },
@@ -2699,10 +3039,10 @@ const L1_SYMPTOMS = [
   { id:"wifi", name:"Wi-Fi not connecting", sub:"No internet, or the network is missing", steps:[
     { path:["Network & Internet","Wi-Fi"], screen:"Network & Internet, Wi-Fi switch",
       say:"Press Home, open Settings, and open Network and Internet. The first row is the Wi-Fi switch. It has to be on. If it is off, press OK to turn it on.",
-      check:"This flow follows the KB connection setup guide. The KB has no will-not-connect troubleshooter. The network the TV is joined to shows Connected under its name — TCL Guest_NEW on the reference TV." },
-    { path:["Network & Internet","See all"], screen:"Network & Internet, See all — your home network, and the password",
-      say:"Scroll down to See all and press OK. This lists every network the TV can see. Find your home network in the list — your home network, not a phone hotspot — and select it. Type the password slowly: it is case sensitive, and the up arrow key on the on-screen keyboard switches between small and capital letters.",
-      check:"If the network is not listed at all, the TV cannot see the router. Ask about distance, and whether the same network shows on their phone in the same room. A hotspot connection explains dropouts; get them onto the home network." },
+      check:"This flow follows the KB connection setup guide. The KB has no will-not-connect troubleshooter. The network the TV is joined to shows Connected under its name. On the reference TV it shows as [connected Wi-Fi network]." },
+    { path:["Network & Internet","See all"], screen:"Network & Internet, See all: your home network and the password",
+      say:"Scroll down to See all and press OK. This lists every network the TV can see. Find your home network in the list, not a phone hotspot, and select it. Type the password slowly. It is case sensitive. The up arrow key on the on-screen keyboard switches between small and capital letters.",
+      check:"If the network is not listed at all, the TV cannot see the router. Ask about distance, and whether the same network shows on their phone in the same room. A hotspot connection explains dropouts. Get them onto the home network." },
     { path:["Network & Internet","Check Internet Connection"], screen:"Network & Internet, Check Internet Connection",
       say:"Once it connects, look at the signal icon next to your network name: it should show full. Then press Back once, scroll down to Check Internet Connection, press OK, and read me exactly what it says when it finishes.",
       check:"Write the result wording into the case notes word for word. Connected to the router but no internet points at the router or the provider, not the TV." }
@@ -2712,8 +3052,8 @@ const L1_SYMPTOMS = [
       say:"Put fresh batteries in the remote, and check they are both facing the way the diagram inside the battery cover shows. Then point the remote straight at the bottom edge of the TV, press the Power button, and tell me if anything happens.",
       check:"Weak or reversed batteries are the most common cause. If the remote does nothing at all, the customer can use the Google TV app on their phone as a remote to follow the rest of this path. Ask them to open it now." },
     { path:["Remotes & Accessories","Remote Control Pairing","Pair a new remote"], screen:"Re-pair the remote",
-      say:"Open Settings and scroll down to Remotes and Accessories. Open Remote Control Pairing and choose Pair remote or accessory. Now hold the Back and Home buttons on the remote together until its light starts pulsing, then pick your remote from the list on the screen.",
-      check:"Keep the remote within a few feet of the TV while pairing, and Bluetooth must be on for it to connect — the live line below shows Bluetooth in the simulator. If pairing has failed three times, check the Bluetooth Blocklist row on the Remotes screen. A blocked remote cannot pair again." },
+      say:"Open Settings and scroll down to Remotes and Accessories. Open Remote Control Pairing. Choose Pair remote or accessory. Hold the Back and Home buttons on the remote together until its light starts pulsing. Then pick your remote from the list on the screen.",
+      check:"Keep the remote within a few feet of the TV while pairing. Bluetooth must be on for it to connect. The live line below shows Bluetooth in the simulator. If pairing has failed three times, check the Bluetooth Blocklist row on the Remotes screen. A blocked remote cannot pair again." },
     { path:null, screen:"Clear the path, clean the sensor",
       say:"Make sure nothing is blocking the bottom edge of the TV where the sensor sits: no soundbar or decorations right in front of it. Then wipe the sensor area on the TV, and the top end of the remote, with a soft dry cloth.",
       check:"The remote talks to the sensor at the bottom edge of the TV. A soundbar parked in front of it blocks every press, and a filmed-over sensor misses presses." },
@@ -2723,7 +3063,7 @@ const L1_SYMPTOMS = [
     { path:null, screen:"The camera test",
       say:"Open the camera on your phone and point the top end of the remote at it. Press any button on the remote while you watch the phone screen, and tell me if you see a light flashing at the end of the remote on the screen.",
       check:"Light on the phone screen: the remote is sending, so the problem is on the TV side. No light at all: the remote is not sending, which points at the remote itself." },
-    { path:["System","About","System update","Network Update"], screen:"Update the TV software — factory reset only as a last resort",
+    { path:["System","About","System update","Network Update"], screen:"Update the TV software: factory reset only as a last resort",
       say:"Open Settings, System, About, System update, and choose Network Update. Install anything it finds, let the TV restart, and test the remote again.",
       check:"A factory reset is the last resort for a remote that still fails after all of this. It erases accounts and apps, so warn the customer and get a clear yes before you go there." }
   ]},
@@ -2733,10 +3073,10 @@ const L1_SYMPTOMS = [
       check:"Most app failures are connection failures. If the TV offers a speed test, run it and note the result in the case. Wrong network or a weak signal: fix that first, then retest the app." },
     { path:["Apps","Manage Updates","See available updates"], screen:"App and TV up to date, then restart the TV",
       say:"Open Settings, Apps, Manage Updates, and See available updates. Install anything waiting, especially for the app that crashes. Then check the TV software is up to date too, and restart the TV from Settings, System, About, Restart.",
-      check:"Also confirm Auto-update apps is on, on the Manage Updates screen — the live line below shows it. Ask the customer which app is crashing before you scroll." },
+      check:"Also confirm Auto-update apps is on, on the Manage Updates screen. The live line below shows it. Ask the customer which app is crashing before you scroll." },
     { path:["Accounts & Profiles"], screen:"Google account signed in and synced",
       say:"Go back to Settings and open Accounts and Profiles. Confirm your Google account is signed in there.",
-      check:"Apps misbehave when the account is signed out or has not synced. If there is no account, add one with the customer on the line. Never ask for the password — the customer types it and never reads it out loud." },
+      check:"Apps misbehave when the account is signed out or has not synced. If there is no account, add one with the customer on the line. Never ask for the password. The customer types it and never reads it out loud." },
     { path:["Apps","See all apps","Disney+"], screen:"Force stop, clear cache, clear data",
       say:"Open Settings, Apps, See all apps, and open the app that keeps crashing. This screen shows Disney+ as the example. Choose Force stop, then Clear cache, and reopen the app. If it still crashes, come back to this page and choose Clear data.",
       check:"Clear data signs the customer out of the app, so it comes after force stop and cache. If it still fails after that, uninstall and reinstall the app. Note in the case whether the app came from Google Play or was sideloaded." },
@@ -2757,15 +3097,15 @@ const L1_SYMPTOMS = [
   ]},
   { id:"channels", name:"Missing channels", sub:"Antenna channels gone, or never found", steps:[
     { path:null, screen:"Coax first: seated, undamaged, nothing in between",
-      say:"Check the antenna cable at both ends: screwed in tight on the back of the TV and at the wall or the antenna, with no damage you can see. If there is a splitter, an amplifier, or a DVR between the antenna and the TV, take it out of the line for this test and run the antenna straight into the TV.",
+      say:"Check the antenna cable at both ends. It should be screwed in tight on the back of the TV and at the wall or the antenna. Check for any damage you can see. If there is a splitter, an amplifier, or a DVR between the antenna and the TV, take it out of the line for this test. Run the antenna straight into the TV.",
       check:"Splitters, amplifiers, and DVRs eat signal and break scans. No scan will find channels with the coax loose or damaged. Confirm this before you scan anything." },
     { path:null, screen:"Antenna position",
       say:"Put the antenna as high as you can, in front of a window if possible, facing the direction the broadcast towers are in, and clear of large metal objects.",
       check:"Most stations are within 50 to 70 miles. If the customer is beyond that range, or the antenna sits in a basement or behind metal, that explains the missing channels by itself." },
     { path:null, screen:"Weather, and a fresh coax cable",
-      say:"If the weather is bad right now, that alone can take channels out — we will rescan when it clears. Meanwhile, if you have another coax cable, swap it in so we can test with a known good cable.",
-      check:"Bad weather hurts reception; do not chase a weather problem with resets. A fresh coax cable rules out the most common hidden fault in the line." },
-    { path:["Channels & Inputs","Channels","Channel Scan"], screen:"Channels, Channel Scan — rescan after every change",
+      say:"If the weather is bad right now, that alone can take channels out. We will rescan when it clears. If you have another coax cable, swap it in so we can test with a known good cable.",
+      check:"Bad weather hurts reception. Do not chase a weather problem with resets. A fresh coax cable rules out the most common hidden fault in the line." },
+    { path:["Channels & Inputs","Channels","Channel Scan"], screen:"Channels, Channel Scan: rescan after every change",
       say:"Open Settings, Channels and Inputs, Channels, and Channel Scan. Run a fresh channel scan after every antenna or cable change, even a small one.",
       check:"Position changes and cable swaps only count once a fresh scan has run. Skipping the rescan is why channels look 'still missing' after the real fix." },
     { path:["Channels & Inputs","Channels","Channel Scan","Country / Region"], screen:"Channel Scan, Country / Region",
@@ -2785,17 +3125,17 @@ const L1_SYMPTOMS = [
     { path:["System","About","System update","Network Update"], screen:"Update the TV software",
       say:"Open Settings, System, About, System update, and choose Network Update. Install anything it finds, let the TV restart, and then keep testing as you normally watch.",
       check:"Note the software version before and after in the case." },
-    { path:["System","Power & Energy","Sleep Timer"], screen:"System, Power & Energy — timers and power saving",
+    { path:["System","Power & Energy","Sleep Timer"], screen:"System, Power & Energy: timers and power saving",
       say:"Open Settings, scroll down to System, press OK, and open Power and Energy. Look at Sleep Timer and Shut-Off Timer: both should be off. While you are in System settings, turn off any power saving feature that shuts the TV down on its own.",
       check:"Both timers turn the TV off on purpose, and power saving can read a quiet room as an empty one. Either one being set explains the symptom on its own. Clear them and retest before anything else." },
     { path:["Channels & Inputs","External Inputs","HDMI (CEC)","Device standby in sync"], screen:"Unplug external devices, back on one at a time",
-      say:"Unplug every external device from the TV and use the TV on its own. If it stays on, reconnect one device at a time until the turning off comes back. While devices are off, also check this setting: Settings, Channels and Inputs, External Inputs, HDMI (CEC), Device standby in sync.",
+      say:"Unplug every external device from the TV and use the TV on its own. If it stays on, reconnect one device at a time until the turning off comes back. While devices are off, check this setting too: Settings, Channels and Inputs, External Inputs, HDMI (CEC), Device standby in sync.",
       check:"With Device standby in sync on, turning off a connected box or console can put the TV into standby too. The live line below shows the value set in the simulator right now. Whichever device brings the shutdown back is your suspect." },
     { path:null, screen:"The TV's own button, vents, and heat",
       say:"Find the power button on the TV itself and make sure it is not stuck or jammed. Check the vents around the TV are clear, nothing is stacked on top of it, and it does not feel unusually hot.",
-      check:"A stuck panel button or an overheating TV both shut the set down. Heat plus shutdowns is a hardware signal — note it in the case." },
+      check:"A stuck panel button or an overheating TV both shut the set down. Heat plus shutdowns is a hardware signal. Note it in the case." },
     { path:["System","About","Reset","Factory reset"], screen:"Power drain, then factory reset last",
-      say:"Unplug the TV, press and hold the power button on the TV itself for about 15 seconds, then plug it straight into a wall outlet and test. If it still turns off by itself after all of this, the last step is a factory reset, from System, About, Reset.",
+      say:"Unplug the TV. Press and hold the power button on the TV itself for about 15 seconds. Then plug it straight into a wall outlet and test. If it still turns off by itself after all of this, the last step is a factory reset, from System, About, Reset.",
       check:"Warn the customer the reset erases accounts and apps, and get a clear yes. Still turning off after the reset, with the timers off, no devices connected, and the vents clear: hardware route." }
   ]},
   { id:"update", name:"Check for a system update", sub:"Software update questions", steps:[
@@ -2818,7 +3158,7 @@ const L1_NEW = [
       say:"Follow the power cable from the wall to the TV. Look for any damage along it, and push it firmly into the back of the TV and into the wall or the strip. Confirm it is seated at both ends.",
       check:"A damaged or half-seated cord is the classic false dead TV. Confirm both ends before going further." },
     { path:null, screen:"Power drain, straight into the wall",
-      say:"If the TV is on a surge protector or power strip, we are bypassing it for this test. Unplug the TV, press and hold the power button on the TV itself for about 15 seconds to drain the power, then plug the TV straight into a working wall outlet and press the power button once.",
+      say:"If the TV is on a surge protector or power strip, we are bypassing it for this test. Unplug the TV. Press and hold the power button on the TV itself for about 15 seconds to drain the power. Then plug the TV straight into a working wall outlet and press the power button once.",
       check:"The 15 second hold is the standard power drain: it clears standby power and forces a true cold boot. Plugging straight into the wall also rules out a failed strip or protector." },
     { path:null, screen:"Test the outlet",
       say:"Plug something you know works, like a phone charger or a lamp, into the same outlet the TV uses. Tell me if it works.",
@@ -2832,14 +3172,14 @@ const L1_NEW = [
   ]},
   { id:"cable-box", name:"Cable box or satellite: no signal", sub:"Box connected but the TV says No Signal", steps:[
     { path:null, screen:"Disconnect everything, then power drain the TV",
-      say:"Unplug the cable box and anything else connected to the TV, so nothing is plugged into the TV except its power cord. Then unplug the TV, press and hold the power button on the TV itself for about 15 seconds to drain the power, plug the TV straight into a wall outlet, and turn it on.",
+      say:"Unplug the cable box and anything else connected to the TV. Nothing should be plugged into the TV except its power cord. Then unplug the TV. Press and hold the power button on the TV itself for about 15 seconds to drain the power. Plug the TV straight into a wall outlet, and turn it on.",
       check:"Start from a clean slate: every external device off the TV, then the standard power drain. Devices go back on one at a time, so you can see which one brings the problem back." },
     { path:null, screen:"Power cycle the box itself",
       say:"Unplug the cable or satellite box from its power for 15 seconds, then plug it back in and give it a couple of minutes to boot up fully. Is there a power light on it now?",
       check:"Boxes lock up and stop sending a signal. A dark box, or one still booting, sends nothing no matter what the TV settings say." },
     { path:["Channels & Inputs","External Inputs","HDMI 1"], screen:"Reconnect one device, and match the input",
-      say:"Reconnect only the cable box, and tell me which HDMI port it is in at the back of the TV. Press the Input or Source button on the remote and pick that same HDMI. Then open Settings, Channels and Inputs, External Inputs, and open that port: the first row, Show this input, must be on. This screen shows HDMI 1 as the example.",
-      check:"No Signal almost always means the TV is showing a different input than the port the box is in, and a hidden input cannot be picked with the Input button at all — that looks exactly like a dead box. The live line below reads Show this input from the simulator." },
+      say:"Reconnect only the cable box. Tell me which HDMI port it is in at the back of the TV. Press the Input or Source button on the remote and pick that same HDMI. Then open Settings, Channels and Inputs, External Inputs, and open that port. The first row, Show this input, must be on. This screen shows HDMI 1 as the example.",
+      check:"No Signal almost always means the TV is showing a different input than the port the box is in, and a hidden input cannot be picked with the Input button at all. That looks exactly like a dead box. The live line below reads Show this input from the simulator." },
     { path:["Channels & Inputs","External Inputs","HDMI 2"], screen:"Try a different HDMI port",
       say:"Move the box cable to a different HDMI port on the TV. This screen shows HDMI 2. Switch the TV to that input and tell me if the picture comes up.",
       check:"If one port works and another does not, you have isolated it to the port. Note which port failed in the case." },
@@ -2851,21 +3191,21 @@ const L1_NEW = [
       check:"Box works on another TV, but fails on every port, device, and cable on this one: that points to a defective TV port and a repair. Box fails on the other TV too: the box, the cable, or the provider. Note which result you got in the case." }
   ]},
   { id:"store-mode", name:"Store mode or demo banners", sub:"Retail mode, demo banners, or picture that will not stay set", steps:[
-    { path:["System"], screen:"System — check for Usage Mode (model dependent)",
+    { path:["System"], screen:"System: check for Usage Mode (model dependent)",
       say:"Open Settings and scroll down to System, and press OK. On models that offer it, open Advanced Settings, then Usage Mode. If you see Usage Mode, set Store Mode to Home Mode, and turn Auto Store Mode off so it does not switch back on its own.",
-      check:"Honest note for you, not the customer: the Usage Mode path is model dependent, and no Usage Mode row appears in any Settings screen captured from the reference TV, so there is no captured screen of the mode switch itself. Do not describe one. If the customer's TV has no Usage Mode row, the reset route below is the fix. Demo banner ads are turned off under On Screen Display settings, on models that offer them." },
-    { path:["Display & Sound","Picture","Picture Mode"], screen:"Picture Mode — the store mode fingerprint",
+      check:"Honest note for you, not the customer. The Usage Mode path is model dependent. No Usage Mode row appears in any Settings screen captured from the reference TV, so there is no captured screen of the mode switch itself. Do not describe one. If the customer's TV has no Usage Mode row, the reset route below is the fix. Demo banner ads are turned off under On Screen Display settings, on models that offer them." },
+    { path:["Display & Sound","Picture","Picture Mode"], screen:"Picture Mode: the store mode fingerprint",
       say:"Go back and open Display and Sound, then Picture, then Picture Mode. Tell me: does the TV keep jumping back to a very bright mode, or undoing picture changes you make?",
       check:"Store mode resets picture settings on a timer and plays demo banners. Picture that will not stay set is the fingerprint, even when no banner is showing at that moment." },
     { path:["System","About","Reset","Factory reset"], screen:"The fix: factory reset, then choose Home Use in setup",
-      say:"The reliable fix is a factory reset, and then choosing Home Use during setup. Open System, About, Reset, Factory reset. When the TV restarts into setup, read every screen carefully: when it asks how the TV will be used, choose Home Use, not Store or Retail.",
+      say:"The reliable fix is a factory reset, then choosing Home Use during setup. Open System, About, Reset, Factory reset. When the TV restarts into setup, read every screen carefully. When it asks how the TV will be used, choose Home Use, not Store or Retail.",
       check:"Factory reset erases accounts and apps. Warn the customer and get a clear yes before starting. Choosing Home Use in setup is the step that ends store mode. Skipping it starts the whole problem over." }
   ]},
   { id:"lines-bars", name:"Lines or bars on screen", sub:"Horizontal, vertical, or cross lines and bars", steps:[
     { path:null, screen:"Power drain, then on with the TV's own button",
-      say:"Unplug the TV, press and hold the power button on the TV itself for about 15 seconds to drain the power, then plug it straight into a wall outlet. Turn it on with the button on the TV itself, not the remote, and tell me if the lines are still there.",
+      say:"Unplug the TV. Press and hold the power button on the TV itself for about 15 seconds to drain the power. Then plug it straight into a wall outlet. Turn it on with the button on the TV itself, not the remote. Tell me if the lines are still there.",
       check:"The drain rules out a temporary glitch, and the panel button rules out the remote. If the lines are gone, test on the customer's normal source before closing, and note the result." },
-    { path:null, screen:"Disconnect everything — do the lines show on the Home screen?",
+    { path:null, screen:"Disconnect everything: do the lines show on the Home screen?",
       say:"Unplug every external device from the TV: cable box, console, everything. Now look at the TV's own Home screen by itself. Are the lines still there with nothing connected?",
       check:"Lines on the Home screen with nothing connected means the TV is making them itself: a panel issue, and settings will not fix it. Lines that only appear with one device connected point at that device or its cable." },
     { path:null, screen:"Describe the lines",
@@ -2885,10 +3225,10 @@ const L1_NEW = [
     { path:null, screen:"Power on with the button on the TV",
       say:"Turn the TV off, then turn it back on using the power button on the TV itself. It is on the bottom edge or just behind the lower corner. Tell me if the picture comes up.",
       check:"Powering on with the physical button rules out the remote. If the panel button brings the picture up and the remote does not, switch to the Remote not working flow." },
-    { path:null, screen:"Volume Up — listen for the click",
+    { path:null, screen:"Volume Up: listen for the click",
       say:"Press Volume Up on the remote a few times and listen carefully. Tell me if you hear a click each time you press it.",
-      check:"Hearing the click confirms the TV is on and responding, even with no picture. No click at all points back at power — check the No power at all flow." },
-    { path:null, screen:"Tap the screen — watch for light",
+      check:"Hearing the click confirms the TV is on and responding, even with no picture. No click at all points back at power. Check the No power at all flow." },
+    { path:null, screen:"Tap the screen: watch for light",
       say:"Gently tap the screen with your fingertip, and watch closely where you tap. Tell me if you see any flash or glow of light at all.",
       check:"Any light on the tap means the backlight is trying to work. No light at all, with sound playing, points at the backlight or the board: a hardware route, not a settings fix." },
     { path:null, screen:"Disconnect external devices and retest",
@@ -2905,7 +3245,7 @@ const L1_NEW = [
     { path:null, screen:"Power on with the button on the TV",
       say:"Turn the TV off, then turn it back on using the power button on the TV itself, on the bottom edge or just behind the lower corner. Tell me if anything at all appears.",
       check:"Powering on with the physical button rules out the remote. If the panel button works and the remote does not, switch to the Remote not working flow." },
-    { path:null, screen:"Volume Up — listen for the click",
+    { path:null, screen:"Volume Up: listen for the click",
       say:"Press Volume Up on the remote a few times and listen carefully. Tell me if you hear a click each time you press it.",
       check:"A click confirms the TV is on and responding even though the screen is black. Total silence on top of the black screen points back at power or the board." },
     { path:null, screen:"Tap the screen, and disconnect external devices",
@@ -2916,13 +3256,13 @@ const L1_NEW = [
       check:"Note the model and version in the case before any reset talk. The live line below shows the version row from the simulator." }
   ]},
   { id:"input-problems", name:"Input problems", sub:"Wrong input, missing input, or a device the TV does not see", steps:[
-    { path:["Channels & Inputs","External Inputs"], screen:"External Inputs — the full input list",
+    { path:["Channels & Inputs","External Inputs"], screen:"External Inputs: the full input list",
       say:"Open Settings, Channels and Inputs, External Inputs. This is every input the TV has. Tell me which one your device is plugged into at the back of the TV.",
       check:"The port on the back panel and the input selected on screen must match. Most device-not-detected calls end right here." },
     { path:["Channels & Inputs","External Inputs","HDMI 2"], screen:"Show this input and the name list",
       say:"Open the input your device uses. This screen shows HDMI 2. The first row, Show this input, must be on. You can also pick a name like Cable or Game Console so the input list is easy to read.",
       check:"The live line below reads Show this input from the simulator. Hidden inputs do not appear when the customer presses the Input button." },
-    { path:["Channels & Inputs","External Inputs","HDMI (CEC)","HDMI Control"], screen:"HDMI Control — device not seen, or inputs switching by themselves",
+    { path:["Channels & Inputs","External Inputs","HDMI (CEC)","HDMI Control"], screen:"HDMI Control: device not seen, or inputs switching by themselves",
       say:"Go back to External Inputs and open HDMI (CEC). The first row, HDMI Control, should be on so connected devices are seen and can wake the TV.",
       check:"The live line below shows HDMI Control from the simulator. Auto Switch, lower on this same screen, is what makes the TV jump inputs when a device wakes. Turn it off if the TV keeps switching away on its own." },
     { path:null, screen:"Reseat and swap the cable",
@@ -2993,21 +3333,21 @@ const L1_FIRSTQ = {
     why:"Suddenly gone points at the antenna line, a splitter, or the weather. Never found points at the antenna position, the range, or the first scan." },
   "tv-off": { q:"Does it turn off at about the same time every time, like always after an hour, or at random times?",
     why:"Same time points at a timer or power saving setting doing it on purpose. Random times point at a connected device, the remote, heat, or the power side." },
-  "update": { q:"Is the TV connected to the internet right now — can it play something online?",
+  "update": { q:"Is the TV connected to the internet right now? Can it play something online?",
     why:"A network update cannot run without internet. If it is offline, the Wi-Fi flow comes first, then this one." },
   "no-power": { q:"Look at the bottom edge of the TV: is there a small standby light, and is it lit, off, or blinking?",
     why:"A lit light means the TV has power and the problem is waking up, not a dead TV. No light at all means power is not reaching it. A blink pattern is evidence the repair team uses." },
-  "cable-box": { q:"Is the cable box itself switched on — can you see a power light on the box?",
+  "cable-box": { q:"Is the cable box itself switched on? Can you see a power light on the box?",
     why:"A box that is off or still booting sends no signal, and the TV says No Signal no matter what the settings are. A lit box points at the input and the cable instead." },
   "store-mode": { q:"Does the TV keep undoing your picture changes, or jump back to a very bright picture on its own?",
     why:"Picture that will not stay set is the fingerprint of store mode, even when no demo banner is showing at that moment." },
   "lines-bars": { q:"Unplug the cable box and anything else connected, and look at the TV's own Home screen: are the lines still there with nothing plugged in?",
     why:"Lines on the Home screen with nothing connected mean the TV is making them itself: a panel problem. Lines with only one device connected point at that device or its cable." },
-  "black-sound": { q:"You can hear the sound the whole time, is that right — it is only the picture that is black?",
+  "black-sound": { q:"Just to confirm: you can hear the sound the whole time, and only the picture is black. Is that right?",
     why:"Sound playing with a black screen means the TV is on and working, and the failure is in the picture path: the backlight or the board." },
   "black-nosound": { q:"Is there a standby light on the TV right now, at the bottom edge?",
     why:"No standby light at all means this is a power problem and the No power at all flow is the right one. A light means the TV has power and the checks in this flow apply." },
-  "input-problems": { q:"Which port on the back of the TV is the device plugged into — can you read the name next to that port, like HDMI 1 or HDMI 2?",
+  "input-problems": { q:"Which port on the back of the TV is the device plugged into? Can you read the name next to that port, like HDMI 1 or HDMI 2?",
     why:"The port on the back and the input picked on screen have to match. Most device-not-seen calls end right there." },
   "account": { q:"When you open Accounts and Profiles, is an account already signed in, or does it ask you to add one?",
     why:"No account at all, or a different account than the one the apps use, explains most sign-in trouble before anything is changed." }
@@ -3063,7 +3403,7 @@ const L1_ESCALATE = {
     check:"Works on another port: the original port is suspect, note which one. Fails on every port with a known good device and cable: the TV side." },
   "account": { screen:"Escalate: sign-in evidence",
     say:"Read me the exact error wording the TV shows when sign-in fails, word for word.",
-    check:"Write the exact error wording into the case. Never ask for the password — the customer types it and never reads it out loud." },
+    check:"Write the exact error wording into the case. Never ask for the password. The customer types it and never reads it out loud." },
   "update": { screen:"Escalate: update evidence",
     say:"Read me the Android TV OS Version row once more, and tell me exactly what Network Update said.",
     check:"Network Update needs working internet. If it fails, run the Wi-Fi not connecting path first, then come back here. Note the version before and after in the case." }
@@ -3129,12 +3469,23 @@ const L1_FIX_STEPS = {
 // Setup and Configuration flows end with the FAB statement and conditioning
 // line reminders — FAB misses concentrate on setup calls.
 const L1_SETUP_FLOWS = { "store-mode":1, "cable-box":1, "account":1 };
+const HOME_START_STEPS = [
+  { homePhoto: HOME_PHOTOS.home, homeIdx: 0, screen: "Home screen: start here",
+    say: "Press the Home button on the remote. You should be on the Home screen.",
+    check: "The customer is on the Home screen, the start point for every walkthrough in this tool." },
+  { homePhoto: HOME_PHOTOS.quick, homeIdx: 1, screen: "Quick Settings panel",
+    say: "Move right along the top bar to the Quick Settings gear and press OK. The Quick Settings panel opens.",
+    check: "The Quick Settings panel is open, with All settings at the top right." },
+  { homePhoto: HOME_PHOTOS.all, homeLanding: true, screen: "Settings main menu: Channels and Inputs focused",
+    say: "Press OK on All settings. That lands on the Settings main menu, with Channels and Inputs focused.",
+    check: "The customer is on the Settings main menu. From here, follow the flow steps below." }
+];
 function effectiveSteps(sym){
-  const steps = sym.steps.slice();
+  const steps = HOME_START_STEPS.concat(sym.steps.slice());
   let checkTxt = "Do not close on 'it looks better.' The customer confirms picture AND sound, on the source they actually watch, before the call ends.";
   if(L1_SETUP_FLOWS[sym.id]) checkTxt += " FAB reminder: give the FAB statement on this setup call. Conditioning line: read the conditioning line too, so the customer leaves knowing what was set up and what happens next.";
   steps.push({ path:null, confirm:true,
-    screen:"Confirm fixed — picture and sound, before you close",
+    screen:"Confirm fixed: picture and sound, before you close",
     say:"Before we finish, let us make sure it is really fixed. Go to the channel or app you actually watch. Is the picture back, and is the sound back with it?",
     check:checkTxt });
   return steps;
@@ -3213,7 +3564,8 @@ const L1_LIVE = {
   }
 };
 function liveLineHTML(symId, idx){
-  const spec = L1_LIVE[symId] && L1_LIVE[symId][idx];
+  if(idx < HOME_START_STEPS.length) return "";
+  const spec = L1_LIVE[symId] && L1_LIVE[symId][idx - HOME_START_STEPS.length];
   if(!spec) return "";
   const n = nodeByPath(spec.path);
   if(!n) return "";
@@ -3257,6 +3609,7 @@ l1SymptomsEl.innerHTML = L1_ALL.map(s=>`<button class="sym-btn" type="button" da
 l1SymptomsEl.querySelectorAll('[data-sym]').forEach(b=>b.addEventListener('click', ()=>selectSymptom(b.dataset.sym)));
 
 function stepPhotoHTML(step, big){
+  if(step.homePhoto) return `<img src="${step.homePhoto}" alt="Real TV capture: ${step.screen}" title="Tap to enlarge" loading="lazy" data-l1enlarge="${step.homePhoto}">`;
   const src = l1Photo(step.path);
   if(step.esc) return `<div class="l1-nophoto">Escalation step — no new TV screen. The customer stays where they are while you collect the evidence and hand the case on.</div>`;
   if(step.confirm) return `<div class="l1-nophoto">No TV screen for this step. It is the closing check: the customer goes to the channel or app they actually watch and confirms picture and sound out loud before you close the call.</div>`;
@@ -3309,7 +3662,7 @@ function selectSymptom(id){
             <div class="say"><small>Say this</small><p>${st.say}</p></div>
             <p class="check"><b>Check:</b> ${st.check}</p>
             <span data-live-idx="${i}"></span>
-            ${st.path?`<button class="btn l1-show" type="button" data-l1show="${i}">Put this screen on the TV above</button>`:""}
+            ${st.path?`<button class="btn l1-show" type="button" data-l1show="${i}">Put this screen on the TV above</button>`:st.homePhoto?`<button class="btn l1-show" type="button" data-homeshow="${i}">Put this screen on the TV above</button>`:""}
           </div>
         </div>
       </div>
@@ -3318,6 +3671,12 @@ function selectSymptom(id){
   l1StepsEl.querySelectorAll('[data-l1show]').forEach(b=>b.addEventListener('click', ()=>{
     const st = steps[+b.dataset.l1show];
     if(st && st.path) findPath(st.path);
+  }));
+  l1StepsEl.querySelectorAll('[data-homeshow]').forEach(b=>b.addEventListener('click', ()=>{
+    const st = steps[+b.dataset.homeshow];
+    if(!st) return;
+    if(st.homeLanding) enterSettingsFromHome();
+    else showHome(st.homeIdx);
   }));
   l1GuideEl.hidden = false;
   window.refreshLiveLines();
@@ -3403,7 +3762,7 @@ function renderFollow(){
   }
   const st = l1Steps[l1FollowIdx];
   const isConfirm = !!st.confirm;
-  const fixIdxs = (L1_FIX_STEPS[l1Sym.id] || []).filter(function(i){ return i < total - 1; });
+  const fixIdxs = (L1_FIX_STEPS[l1Sym.id] || []).map(function(i){ return i + HOME_START_STEPS.length; }).filter(function(i){ return i < total - 1; });
   const isFix = fixIdxs.indexOf(l1FollowIdx) >= 0;
   const isLastFix = isFix && fixIdxs.length && l1FollowIdx === fixIdxs[fixIdxs.length - 1];
   const isLastTrouble = l1FollowIdx === total - 2;
@@ -3468,6 +3827,8 @@ function renderFollow(){
   if(done) done.addEventListener('click', ()=>{ exitFollow(); showToast("Follow-along finished: " + l1Sym.name); });
   // drive the simulator to the same screen the customer should be on, without scrolling the page away
   if(st.path) findPath(st.path, {noScroll:true});
+  else if(st.homeLanding) enterSettingsFromHome({noScroll:true});
+  else if(st.homePhoto) showHome(st.homeIdx);
   window.refreshLiveLines();
   l1FollowEl.scrollIntoView({behavior:'smooth', block:'nearest'});
 }
@@ -3664,6 +4025,414 @@ if(repCopyBtn) repCopyBtn.addEventListener('click', function(){
     }).then(function(){ status.textContent = "Report submitted."; }, fallback);
   } else fallback();
 });
+
+// Tab layout preview: Navigation, TSS, Probing share one twin.
+function probeStateText(){
+  try{
+    const cec = nodeByPath(["Channels & Inputs","External Inputs","HDMI (CEC)","HDMI Control"]);
+    const earc = nodeByPath(["Channels & Inputs","External Inputs","HDMI (CEC)","eARC"]);
+    const ao = nodeByPath(["Display & Sound","Audio Output Settings","Audio Output"]);
+    return "HDMI Control: " + liveValueOf(cec) + " · eARC: " + liveValueOf(earc) + (earc && earc._disabled ? " (greyed out)" : "") + " · Audio Output: " + liveValueOf(ao);
+  }catch(e){ return "—"; }
+}
+function buildProbing(){
+  const list = document.getElementById('probeList'); if(!list) return;
+  let html = "";
+  L1_ALL.forEach(function(sym){
+    const fq = L1_FIRSTQ[sym.id];
+    const steps = effectiveSteps(sym);
+    html += '<div class="probe-flow"><h3>' + sym.name + ' <small>' + sym.sub + '</small></h3>';
+    if(fq){ html += '<div class="probe-q"><b>Ask first:</b><p>' + fq.q + '</p><p class="check"><b>Why it matters:</b> ' + fq.why + '</p></div>'; }
+    steps.forEach(function(st){
+      html += '<div class="probe-q"><b>' + st.screen + '</b><p class="check">' + st.check + '</p></div>';
+    });
+    html += '<button class="btn primary" type="button" data-probeflow="' + sym.id + '">Open this flow in TSS →</button></div>';
+  });
+  list.innerHTML = html;
+  list.querySelectorAll('[data-probeflow]').forEach(function(b){
+    b.addEventListener('click', function(){
+      setTab('tss');
+      selectSymptom(b.dataset.probeflow);
+      document.getElementById('l1Panel').scrollIntoView({behavior:'smooth', block:'start'});
+    });
+  });
+}
+function setTab(name){
+  document.body.classList.remove('tab-nav','tab-tss','tab-probing','tab-top10');
+  document.body.classList.add('tab-' + name);
+  document.querySelectorAll('.tabbar button').forEach(function(b){ b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'); });
+  const pp = document.getElementById('probingPanel');
+  if(pp) pp.hidden = (name !== 'probing');
+  if(name === 'probing'){ const ps = document.getElementById('probeState'); if(ps) ps.textContent = probeStateText(); }
+}
+document.querySelectorAll('.tabbar button').forEach(function(b){ b.addEventListener('click', function(){ setTab(b.dataset.tab); }); });
+buildProbing();
+setTab('nav');
+</script>
+<script>
+// ---- Remote picker (build 2026.11.02-home, gap 2): 22 manufacturer photos from
+// Remote_control_HQ_-_Team_Share.xlsx, mapped by drawing anchor, grouped by platform.
+// Photos are files under assets/remotes/, never inlined. The hotspot buttons in
+// the HTML above keep the same data-key values as the old RC923 panel, so the
+// existing remote handler (querySelectorAll('[data-key]')) binds them at load,
+// whatever remote is picked. Picking a remote only swaps photo, name, code,
+// remark, variant, the not-used list, and the hotspot positions; it never
+// rebuilds the working buttons.
+const REMOTE_PICKER = [
+ {
+  "id": "fire-01-rc827",
+  "group": "Fire TV",
+  "name": "RC827",
+  "code": "06-F47T25-LL006",
+  "remark": "EOL. Suggested replacement in sheet: G0401-000212.",
+  "variant": "App keys: Prime Video, Netflix, DIRECTV, peacock.",
+  "photo": "assets/photos/remote-002.png",
+  "notused": "Voice, menu, media playback (rewind, play/pause, fast-forward), channel, mute, settings, guide, and the app keys."
+ },
+ {
+  "id": "fire-02-21001-000112",
+  "group": "Fire TV",
+  "name": "(no RC name in sheet)",
+  "code": "21001-000112",
+  "remark": "EOL. Same photo is also anchored at the G0401-000212 row in the sheet.",
+  "variant": "App keys: Prime Video, Netflix, Disney+, amazon music. Branded TCL | firetv.",
+  "photo": "assets/photos/remote-003.png",
+  "notused": "Voice, menu, media playback (rewind, play/pause, fast-forward), channel, mute, settings, guide, and the app keys."
+ },
+ {
+  "id": "fire-03-g0401-000212",
+  "group": "Fire TV",
+  "name": "(no RC name in sheet)",
+  "code": "G0401-000212",
+  "remark": "No remark in sheet.",
+  "variant": "App keys: Prime Video, Netflix, Disney+, amazon music. Photo is branded INSIGNIA.",
+  "photo": "assets/photos/remote-004.png",
+  "notused": "Voice, menu, media playback (rewind, play/pause, fast-forward), channel, mute, settings, guide, and the app keys."
+ },
+ {
+  "id": "fire-04-21001-000130",
+  "group": "Fire TV",
+  "name": "(no RC name in sheet)",
+  "code": "21001-000130",
+  "remark": "Used in Canada.",
+  "variant": "App keys: Prime Video, Netflix, APPS, amazon music.",
+  "photo": "assets/photos/remote-005.png",
+  "notused": "Voice, menu, media playback (rewind, play/pause, fast-forward), channel, mute, settings, guide, and the app keys."
+ },
+ {
+  "id": "fire-05-rc813",
+  "group": "Fire TV",
+  "name": "RC813",
+  "code": "G0401-000249",
+  "remark": "Used in Canada.",
+  "variant": "App keys: Prime Video, Netflix, Disney+, APPS, TCLtv, amazon music.",
+  "photo": "assets/photos/remote-006.png",
+  "notused": "Voice, input/source, settings, menu, media playback, channel, mute, and the app keys."
+ },
+ {
+  "id": "fire-06-21001-000167",
+  "group": "Fire TV",
+  "name": "(no RC name in sheet)",
+  "code": "21001-000167",
+  "remark": "No remark in sheet.",
+  "variant": "App keys: Prime Video, Netflix, Disney+, amazon music, TCLtv, APPS.",
+  "photo": "assets/photos/remote-007.png",
+  "notused": "Voice, input/source, settings, menu, media playback, channel, mute, guide, and the app keys."
+ },
+ {
+  "id": "gtv-01-rc813-shared",
+  "group": "Google TV and Android TV",
+  "name": "RC813",
+  "code": "21001-000099 and 21001-000135 (shared photo)",
+  "remark": "No remark in sheet. Suggested replacement for 21001-000099 in sheet: 21001-000154.",
+  "variant": "App keys: Netflix, Prime Video, YouTube, TCL Channel, TCL Home, Apple TV.",
+  "photo": "assets/photos/remote-008.png",
+  "notused": "Input/source, profile, voice, settings, TV/guide, menu, channel, TV Plus, 123, info, and the app keys."
+ },
+ {
+  "id": "gtv-02-21001-000154",
+  "group": "Google TV and Android TV",
+  "name": "(no RC name in sheet)",
+  "code": "21001-000154",
+  "remark": "No remark in sheet.",
+  "variant": "App keys: Netflix, Prime Video, YouTube, TCLtv, Apple TV, pluto.",
+  "photo": "assets/photos/remote-009.png",
+  "notused": "Input/source, profile, voice, settings, TV/guide, menu, channel, 123, and the app keys."
+ },
+ {
+  "id": "gtv-03-rc802v",
+  "group": "Google TV and Android TV",
+  "name": "RC802V",
+  "code": "06-BTZNYY-SRC802V",
+  "remark": "ATV EOL.",
+  "variant": "App keys: Netflix, YouTube.",
+  "photo": "assets/photos/remote-010.png",
+  "notused": "Settings, voice, menu, TV/input, channel, mute, and the app keys."
+ },
+ {
+  "id": "gtv-04-21001-000033",
+  "group": "Google TV and Android TV",
+  "name": "(no RC name in sheet)",
+  "code": "21001-000033",
+  "remark": "ATV EOL.",
+  "variant": "App keys: Netflix, Prime Video.",
+  "photo": "assets/photos/remote-011.png",
+  "notused": "Settings, voice, menu, TV/input, channel, mute, and the app keys."
+ },
+ {
+  "id": "gtv-05-rc902n",
+  "group": "Google TV and Android TV",
+  "name": "RC902N",
+  "code": "21001-000022",
+  "remark": "EOL.",
+  "variant": "App keys: Netflix, YouTube, TCL Channel, Prime Video.",
+  "photo": "assets/photos/remote-012.png",
+  "notused": "Menu, voice, settings, TV/input, feature keys below the D-pad, and the app keys. No volume button is shown on the front of this photo."
+ },
+ {
+  "id": "gtv-06-g0401-000232",
+  "group": "Google TV and Android TV",
+  "name": "(no RC name in sheet)",
+  "code": "G0401-000232",
+  "remark": "NXTFRAME TV (A300W, A300Pro). Suggested replacement in sheet: G0401-000232.",
+  "variant": "App keys: Netflix, YouTube. White remote.",
+  "photo": "assets/photos/remote-013.png",
+  "notused": "TV/input, profile, voice, settings, 123, menu, channel, and the app keys. No volume button is shown on the front of this photo."
+ },
+ {
+  "id": "gtv-07-rc716",
+  "group": "Google TV and Android TV",
+  "name": "RC716",
+  "code": "G0401-000239",
+  "remark": "IR remote control.",
+  "variant": "App keys: Netflix, YouTube. Full number pad.",
+  "photo": "assets/photos/remote-014.png",
+  "notused": "Number keys, coloured keys, input, menu, settings, search, channel, info, media playback, and the app keys."
+ },
+ {
+  "id": "gtv-08-rc923",
+  "group": "Google TV and Android TV",
+  "name": "RC923",
+  "code": "21001-000100",
+  "remark": "backlite. Suggested replacement in sheet: 21001-000121.",
+  "variant": "App keys: Netflix, Prime Video, YouTube, TCL Channel, TCL Home, Apple TV.",
+  "photo": "assets/photos/remote-001.png",
+  "notused": "Input/source, profile, voice, settings, TV/guide, menu, channel, TV Plus, 123, info, and the app keys."
+ },
+ {
+  "id": "gtv-09-21001-000121",
+  "group": "Google TV and Android TV",
+  "name": "(no RC name in sheet)",
+  "code": "21001-000121",
+  "remark": "backlite. This is the suggested replacement for RC923 21001-000100.",
+  "variant": "App keys: Netflix, Prime Video, YouTube, TCLtv, Apple TV, pluto. Note the different app row from RC923.",
+  "photo": "assets/photos/remote-015.png",
+  "notused": "Input/source, profile, voice, settings, TV/guide, menu, channel, TV Plus, 123, info, and the app keys."
+ },
+ {
+  "id": "roku-01-rc280",
+  "group": "Roku TV",
+  "name": "RC280",
+  "code": "06-IRPT20-ARC280J (first code in the RC280 family)",
+  "remark": "RC280 IR remote. Basic buttons are the same across RC280 variants; the four app keys differ. Family codes: 06-IRPT20-ARC280J, 06-IRPT20-DRC280, 06-IRPT20-FRC280, 06-IRPT20-GRC280, 06-IRPT20-HRC280, 06-IRPT20-IRC280, 06-IRPT20-IRC280J, 06-IRPT20-JRC280, 06-IRPT20-MRC280, 06-IRPT20-MRC280J, 06-IRPT20-NRC280J, 06-IRPT20-QRC280J, 06-IRPT20-RRC280J, 06-IRPT20-TRC280J, 06-IRPT20-URC280J, 06-IRPT20-WRC280J, 06-IRPT20-XRC280J, 21001-000012, 21001-000014, G0401-000206, 21001-000110, 21001-000109, 21001-000071, 21001-000070, 06-IRPT20-YRC280J.",
+  "variant": "App keys: Netflix, Disney+, Apple TV+, Prime Video. Purple D-pad, red power button.",
+  "photo": "assets/photos/remote-016.png",
+  "notused": "Replay, options, media playback (rewind, play/pause, fast-forward), and the app keys. Volume is not on the front of this remote."
+ },
+ {
+  "id": "roku-02-rc280",
+  "group": "Roku TV",
+  "name": "RC280",
+  "code": "06-IRPT20-ARC280J (first code in the RC280 family)",
+  "remark": "RC280 IR remote. Basic buttons are the same across RC280 variants; the four app keys differ. Family codes: 06-IRPT20-ARC280J, 06-IRPT20-DRC280, 06-IRPT20-FRC280, 06-IRPT20-GRC280, 06-IRPT20-HRC280, 06-IRPT20-IRC280, 06-IRPT20-IRC280J, 06-IRPT20-JRC280, 06-IRPT20-MRC280, 06-IRPT20-MRC280J, 06-IRPT20-NRC280J, 06-IRPT20-QRC280J, 06-IRPT20-RRC280J, 06-IRPT20-TRC280J, 06-IRPT20-URC280J, 06-IRPT20-WRC280J, 06-IRPT20-XRC280J, 21001-000012, 21001-000014, G0401-000206, 21001-000110, 21001-000109, 21001-000071, 21001-000070, 06-IRPT20-YRC280J.",
+  "variant": "App keys: Netflix, Disney+, Global, Google Play.",
+  "photo": "assets/photos/remote-017.png",
+  "notused": "Replay, options, media playback (rewind, play/pause, fast-forward), and the app keys. Volume is not on the front of this remote."
+ },
+ {
+  "id": "roku-03-rc280",
+  "group": "Roku TV",
+  "name": "RC280",
+  "code": "06-IRPT20-ARC280J (first code in the RC280 family)",
+  "remark": "RC280 IR remote. Basic buttons are the same across RC280 variants; the four app keys differ. Family codes: 06-IRPT20-ARC280J, 06-IRPT20-DRC280, 06-IRPT20-FRC280, 06-IRPT20-GRC280, 06-IRPT20-HRC280, 06-IRPT20-IRC280, 06-IRPT20-IRC280J, 06-IRPT20-JRC280, 06-IRPT20-MRC280, 06-IRPT20-MRC280J, 06-IRPT20-NRC280J, 06-IRPT20-QRC280J, 06-IRPT20-RRC280J, 06-IRPT20-TRC280J, 06-IRPT20-URC280J, 06-IRPT20-WRC280J, 06-IRPT20-XRC280J, 21001-000012, 21001-000014, G0401-000206, 21001-000110, 21001-000109, 21001-000071, 21001-000070, 06-IRPT20-YRC280J.",
+  "variant": "App keys: Netflix, Disney+, hulu, sling.",
+  "photo": "assets/photos/remote-018.png",
+  "notused": "Replay, options, media playback (rewind, play/pause, fast-forward), and the app keys. Volume is not on the front of this remote."
+ },
+ {
+  "id": "roku-04-rc580",
+  "group": "Roku TV",
+  "name": "RC580",
+  "code": "06-WFZNYY-ARC580 (first code in the RC580 family)",
+  "remark": "RC580 Bluetooth remote. Basic buttons are the same across RC580 variants; the four app keys differ. Family codes: 06-WFZNYY-ARC580, 06-WFZNYY-CRC580, 06-WFZNYY-ERC580, 06-WFZNYY-FRC580, 06-WFZNYY-GRC580, 06-WFZNYY-HRC580, 06-WFZNYY-IRC580, 21001-000006, 21001-000011, 21001-000086.",
+  "variant": "App keys: Netflix, Disney+, Global, Google Play. Photo carries thin blue diagram lines; they are not buttons.",
+  "photo": "assets/photos/remote-019.png",
+  "notused": "Replay, voice, options, media playback, and the app keys. Volume is not on the front of this remote."
+ },
+ {
+  "id": "roku-05-rc580",
+  "group": "Roku TV",
+  "name": "RC580",
+  "code": "06-WFZNYY-ARC580 (first code in the RC580 family)",
+  "remark": "RC580 Bluetooth remote. Basic buttons are the same across RC580 variants; the four app keys differ. Family codes: 06-WFZNYY-ARC580, 06-WFZNYY-CRC580, 06-WFZNYY-ERC580, 06-WFZNYY-FRC580, 06-WFZNYY-GRC580, 06-WFZNYY-HRC580, 06-WFZNYY-IRC580, 21001-000006, 21001-000011, 21001-000086.",
+  "variant": "App keys: Netflix, Disney+, hulu, sling.",
+  "photo": "assets/photos/remote-020.png",
+  "notused": "Replay, voice, options, media playback, and the app keys. Volume is not on the front of this remote."
+ },
+ {
+  "id": "roku-06-rc580",
+  "group": "Roku TV",
+  "name": "RC580",
+  "code": "06-WFZNYY-ARC580 (first code in the RC580 family)",
+  "remark": "RC580 Bluetooth remote. Basic buttons are the same across RC580 variants; the four app keys differ. Family codes: 06-WFZNYY-ARC580, 06-WFZNYY-CRC580, 06-WFZNYY-ERC580, 06-WFZNYY-FRC580, 06-WFZNYY-GRC580, 06-WFZNYY-HRC580, 06-WFZNYY-IRC580, 21001-000006, 21001-000011, 21001-000086.",
+  "variant": "App keys: Netflix, ESPN+, hulu, Roku Channel.",
+  "photo": "assets/photos/remote-021.png",
+  "notused": "Replay, voice, options, media playback, and the app keys. Volume is not on the front of this remote."
+ },
+ {
+  "id": "roku-07-rc580pro",
+  "group": "Roku TV",
+  "name": "RC580 PRO",
+  "code": "21001-000079",
+  "remark": "RC580 PRO Bluetooth remote. The RC580 and RC580 PRO have the same features but differ in appearance.",
+  "variant": "App keys: Netflix, Disney+, Apple TV+, HBO Max. Narrower grey remote.",
+  "photo": "assets/photos/remote-022.png",
+  "notused": "Replay, voice, options, media playback, and the app keys. Volume is not on the front of this remote."
+ }
+];
+
+// Hotspot positions, in 0-1000 photo coordinates, x then y, centered on the
+// physical button in that remote's manufacturer photo. RC923 positions are
+// the briefed measured positions. All other positions are from visual
+// grounding on that remote's own photo, except volup/voldown null where
+// the photo shows no front volume button (all Roku entries, RC902N, and
+// G0401-000232). Null hides that hotspot; no separate volume pad is added.
+const REMOTE_HOTSPOTS = {
+ "fire-01-rc827": {power:[302,55],up:[500,164],down:[500,304],left:[285,233],right:[715,233],ok:[500,233],back:[295,383],home:[500,383],volup:[300,543],voldown:[300,623]},
+ "fire-02-21001-000112": {power:[302,65],up:[500,227],down:[500,383],left:[311,305],right:[690,305],ok:[500,305],back:[300,464],home:[500,464],volup:[295,632],voldown:[295,702]},
+ "fire-03-g0401-000212": {power:[266,60],up:[500,179],down:[500,327],left:[291,250],right:[710,250],ok:[500,250],back:[284,416],home:[500,416],volup:[285,585],voldown:[285,668]},
+ "fire-04-21001-000130": {power:[330,60],up:[500,201],down:[500,364],left:[410,282],right:[590,282],ok:[500,282],back:[340,433],home:[500,433],volup:[340,598],voldown:[340,658]},
+ "fire-05-rc813": {power:[605,58],up:[500,203],down:[500,318],left:[400,260],right:[600,260],ok:[500,260],back:[395,393],home:[500,393],volup:[398,473],voldown:[398,523]},
+ "fire-06-21001-000167": {power:[660,55],up:[500,205],down:[500,315],left:[390,260],right:[610,260],ok:[500,260],back:[345,395],home:[500,395],volup:[345,475],voldown:[345,545]},
+ "gtv-01-rc813-shared": {power:[645,58],up:[500,185],down:[500,340],left:[390,265],right:[610,265],ok:[500,265],back:[360,403],home:[500,403],volup:[360,490],voldown:[360,560]},
+ "gtv-02-21001-000154": {power:[325,42],up:[502,155],down:[502,301],left:[345,232],right:[655,232],ok:[500,228],back:[355,375],home:[500,375],volup:[350,440],voldown:[350,500]},
+ "gtv-03-rc802v": {power:[282,69],up:[492,164],down:[492,363],left:[282,264],right:[715,264],ok:[492,264],back:[282,363],home:[282,164],volup:[492,463],voldown:[492,576]},
+ "gtv-04-21001-000033": {power:[295,65],up:[500,175],down:[500,395],left:[295,285],right:[705,285],ok:[500,285],back:[295,395],home:[295,175],volup:[500,505],voldown:[500,615]},
+ "gtv-05-rc902n": {power:[685,50],up:[500,234],down:[500,331],left:[350,282],right:[650,282],ok:[500,282],back:[315,393],home:[500,393],volup:null,voldown:null},
+ "gtv-06-g0401-000232": {power:[675,83],up:[500,283],down:[500,437],left:[382,360],right:[618,360],ok:[500,360],back:[324,517],home:[499,517],volup:null,voldown:null},
+ "gtv-07-rc716": {power:[708,60],up:[500,438],down:[500,593],left:[300,515],right:[700,515],ok:[500,518],back:[290,633],home:[500,633],volup:[290,693],voldown:[290,743]},
+ "gtv-08-rc923": {power:[787,104],up:[498,236],down:[498,423],left:[322,332],right:[678,332],ok:[501,336],back:[334,472],home:[500,472],volup:[337,556],voldown:[338,640]},
+ "gtv-09-21001-000121": {power:[600,40],up:[500,198],down:[500,313],left:[390,253],right:[610,253],ok:[500,255],back:[400,368],home:[500,368],volup:[400,443],voldown:[400,533]},
+ "roku-01-rc280": {power:[500,73],up:[500,292],down:[500,492],left:[323,393],right:[677,393],ok:[500,393],back:[300,170],home:[700,170],volup:null,voldown:null},
+ "roku-02-rc280": {power:[478,83],up:[500,310],down:[500,520],left:[313,415],right:[688,415],ok:[500,415],back:[335,193],home:[665,193],volup:null,voldown:null},
+ "roku-03-rc280": {power:[501,55],up:[503,242],down:[503,410],left:[385,330],right:[620,330],ok:[503,328],back:[411,133],home:[589,133],volup:null,voldown:null},
+ "roku-04-rc580": {power:[418,77],up:[458,318],down:[458,505],left:[268,418],right:[605,418],ok:[458,418],back:[258,180],home:[553,180],volup:null,voldown:null},
+ "roku-05-rc580": {power:[500,80],up:[500,258],down:[500,440],left:[308,348],right:[693,348],ok:[500,350],back:[325,170],home:[675,170],volup:null,voldown:null},
+ "roku-06-rc580": {power:[485,73],up:[485,288],down:[485,490],left:[298,390],right:[668,390],ok:[483,390],back:[318,178],home:[643,178],volup:null,voldown:null},
+ "roku-07-rc580pro": {power:[500,51],up:[500,168],down:[500,307],left:[310,238],right:[690,238],ok:[500,237],back:[275,127],home:[725,127],volup:null,voldown:null}
+};
+(function(){
+  const sel = document.getElementById('remotePicker');
+  const img = document.getElementById('remotePhoto');
+  const meta = document.getElementById('remoteMeta');
+  const notUsed = document.getElementById('remoteNotUsed');
+  if(!sel || !img || !meta || !notUsed) return;
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function render(){
+    const r = REMOTE_PICKER.find(function(x){ return x.id === sel.value; }) || REMOTE_PICKER[0];
+    img.src = r.photo;
+    img.alt = 'Manufacturer photo of remote ' + r.name + ', code ' + r.code;
+    meta.innerHTML = '<b>' + esc(r.name) + '</b><br><span>Code: ' + esc(r.code) + '</span><br><span>Remark: ' + esc(r.remark) + '</span><br><span>' + esc(r.variant) + '</span>';
+    notUsed.textContent = 'Printed on this remote, for reference (see the button guide below): ' + r.notused;
+    const spots = REMOTE_HOTSPOTS[r.id] || REMOTE_HOTSPOTS['gtv-08-rc923'];
+    document.querySelectorAll('.remote-hot').forEach(function(b){
+      const pos = spots[b.dataset.key];
+      if(!pos){ b.hidden = true; return; }
+      b.hidden = false;
+      b.style.left = (pos[0] / 10) + '%';
+      b.style.top = (pos[1] / 10) + '%';
+    });
+  }
+  sel.addEventListener('change', render);
+  render();
+})();
+</script>
+<script>
+// ---- More keys + button guide wiring (build 2026.11.02-remote-fix2).
+// The labelled keys under the remote photo cover the buttons the photo
+// hotspots do not: Settings and Input drive the twin, Mute toggles the
+// volume OSD, and Voice / Menu / Options / number keys explain themselves,
+// matching the button guide printed above them.
+(function(){
+  function guard(){
+    if(typeof booting !== 'undefined' && booting) return true;
+    if(typeof tvOff !== 'undefined' && tvOff){ showToast("TV is off — press Power on the remote photo first."); return true; }
+    return false;
+  }
+  function xSettings(){
+    if(guard()) return;
+    if(homeStep !== null){ enterSettingsFromHome(); showToast("Settings — opened with the Settings key"); return; }
+    stack = [{title:"Settings", section:"GENERAL SETTINGS", items: rootItems}];
+    focusIdx = 0;
+    closeDialog();
+    render();
+    document.getElementById('tvScreen').scrollIntoView({behavior:'smooth', block:'center'});
+    showToast("Settings — main menu, opened with the Settings key");
+  }
+  function xInput(){
+    if(guard()) return;
+    if(homeStep !== null) enterSettingsFromHome({noScroll:true});
+    findPath(["Channels & Inputs","External Inputs"]);
+    activate(focusedItem());
+    showToast("Input — this is the External Inputs screen. On the real TV the Input key lists HDMI 1, 2, 3, AV and TV; pick the port the device is plugged into.");
+  }
+  document.querySelectorAll('[data-x]').forEach(function(b){
+    b.addEventListener('click', function(){
+      const k = b.dataset.x;
+      if(k === 'settings'){ xSettings(); return; }
+      if(k === 'input'){ xInput(); return; }
+      if(k === 'mute'){ if(!guard()) remoteMute(); return; }
+      if(guard()) return;
+      if(k === 'voice') showToast("Voice: hold the microphone button and speak — search shows and apps, open settings, or control the TV hands-free. The remote must be paired by Bluetooth. Voice is not simulated here.");
+      else if(k === 'menu') showToast("Menu: opens the menu for the screen or app you are in. While watching TV it often brings up quick picture and sound options.");
+      else if(k === 'options') showToast("Options: extra choices for whatever is highlighted. On Roku remotes this is the star key. Inside Settings, OK opens the same choices.");
+    });
+  });
+  document.querySelectorAll('[data-num]').forEach(function(b){
+    b.addEventListener('click', function(){
+      if(guard()) return;
+      showToast("Number " + b.dataset.num + ": on live TV, number keys jump straight to that channel, and they type PINs and codes. They are not used inside Settings menus.");
+    });
+  });
+})();
+</script>
+<script>
+// ---- Links & review: copy the Argon review prompt, nothing else wired here.
+// In-page feedback only (status line + the existing toast); no alert/confirm.
+(function(){
+  var btn = document.getElementById('copyArgonPrompt');
+  var pre = document.getElementById('argonPrompt');
+  var status = document.getElementById('argonCopyStatus');
+  if(!btn || !pre) return;
+  function copied(){
+    if(status) status.textContent = "Prompt copied — paste it into Google Argon.";
+    if(typeof showToast === 'function') showToast("Review prompt copied — paste it into Google Argon");
+  }
+  function execCopy(text){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); copied(); }
+    catch(err){ if(status) status.textContent = "Copy did not work here. Select the prompt text and copy it by hand."; }
+    document.body.removeChild(ta);
+  }
+  btn.addEventListener('click', function(){
+    var text = pre.textContent.trim();
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(copied, function(){ execCopy(text); });
+    } else execCopy(text);
+  });
+})();
 </script>
 </body>
 </html>
