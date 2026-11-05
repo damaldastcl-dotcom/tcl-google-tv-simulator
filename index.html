@@ -7,7 +7,7 @@
 <link rel="icon" href="data:,"/>
 <title>Google TV Settings Simulator</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" onload="this.onload=null;this.rel='stylesheet'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"></noscript>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
 <style>
   :root{
     --bg:#07080b; --outer:#0b0c10; --panel:#14161c; --panel2:#1a1d26; --panel3:#1e212c;
@@ -18,7 +18,7 @@
     --radius:18px;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;background:var(--bg);color:var(--text);font-family:"Google Sans",Roboto,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
+  html,body{margin:0;background:var(--bg);color:var(--text);font-family:Roboto,system-ui,-apple-system,Segoe UI,Arial,sans-serif}
   a{color:inherit}
   /* top utility bar - minimal, shell owns title so keep low */
   .topbar{max-width:1180px;margin:0 auto;padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
@@ -521,13 +521,44 @@ html,body{overflow-x:hidden}
   .lr-copy-status{color:#137333}
   .prompt-box{background:#f8f9fa;border-color:#dadce0;color:#202124}
 }
+/* polish3: collapsed button guide, sticky TV in the L1 guide view and on
+   mobile, compact Top 10 pills, dirty-state banner, remote platform
+   warning, RC923 gear/Input/Mute hotspot sizes, Flow sources copy. */
+.remote-guide-details summary{cursor:pointer;font-size:14px;font-weight:700;color:#fff;text-align:center;padding:6px 4px;list-style-position:inside}
+.remote-guide-details summary:hover{color:#8ab4f8}
+.remote-guide-details .g-sub{margin-top:8px}
+.remote-hot[data-key="settings"]{width:11%;height:3.2%}
+.remote-hot[data-key="input"]{width:13%;height:3.6%}
+.remote-hot[data-key="mute"]{width:13%;height:3.8%}
+.remote-warn{margin:10px 0 0;width:100%;font-size:12.5px;color:#ffe1a8;text-align:center;line-height:1.5;background:#3a2f14;border:1px solid #7a6420;border-radius:10px;padding:9px 11px}
+.remote-warn[hidden]{display:none}
+.cat-grid{display:flex;flex-wrap:wrap;gap:6px}
+.cat-btn{border-radius:999px;padding:8px 13px;display:inline-flex;align-items:center;min-height:44px}
+.cat-btn b{font-size:13px;white-space:nowrap}
+.cat-btn span{display:none}
+.dirty-banner{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px;background:#3a2f14;border:1px solid #7a6420;border-radius:10px;padding:10px 12px;font-size:13.5px;color:#ffe1a8}
+.dirty-banner[hidden]{display:none}
+.dirty-banner .btn{margin-left:auto}
+.src-copy{margin-left:10px;padding:5px 11px;font-size:12px;min-height:36px;white-space:nowrap}
+@media(min-width:901px){
+  .stage-row .tv-shell{position:sticky;top:12px}
+  body.tab-tss .stage-row{position:sticky;top:12px}
+}
+@media(max-width:900px){
+  .stage-row .tv-shell{position:sticky;top:8px;z-index:6}
+}
+@media (prefers-color-scheme: light){
+  .remote-guide-details summary{color:#202124}
+  .remote-warn{background:#fef7e0;border-color:#f9ab78;color:#7a4a00}
+  .dirty-banner{background:#fef7e0;border-color:#f9ab78;color:#7a4a00}
+}
 </style>
 </head>
 <body>
 <div class="topbar">
   <div class="topbar-left">
     <span class="badge"><i></i> SIMULATOR • TRAINING REPLICA</span>
-    <p><strong>TCL Google TV</strong> — your TV's actual menus, with its actual screens. Settings only, no app screens.</p>
+    <p><strong>TCL Google TV</strong> — the Reference TV's actual menus, with its actual screens. Settings only, no app screens.</p>
   </div>
   <div class="seg" role="group" aria-label="View mode">
     <button id="viewSim" class="active">Simulator</button>
@@ -546,7 +577,7 @@ html,body{overflow-x:hidden}
 <div class="wrap">
   <nav class="tabbar" role="tablist" aria-label="Simulator sections">
     <button type="button" role="tab" data-tab="nav" aria-selected="true">Navigation</button>
-    <button type="button" role="tab" data-tab="tss" aria-selected="false">TSS</button>
+    <button type="button" role="tab" data-tab="tss" aria-selected="false">L1 Call Mode</button>
     <button type="button" role="tab" data-tab="probing" aria-selected="false">Probing</button>
     <button type="button" role="tab" data-tab="top10" aria-selected="false">Top 10</button>
   </nav>
@@ -570,7 +601,7 @@ html,body{overflow-x:hidden}
         </div>
       </div>
       <div class="home-stage" id="homeStage" hidden>
-        <img id="homeImg" alt="Real TV capture: Google TV Home screen" loading="lazy">
+        <img id="homeImg" alt="Real TV capture: Google TV Home screen" loading="eager" fetchpriority="high">
         <div class="home-cap" id="homeCap"></div>
         <div class="home-actions"><button class="btn primary" id="homeNextBtn" type="button"></button><button class="btn" id="homeBackBtn" type="button">← Back</button></div>
       </div>
@@ -581,15 +612,15 @@ html,body{overflow-x:hidden}
         <aside class="preview-col" id="previewCol" aria-live="polite"></aside>
       </div>
 
-      <div class="photo-stage" id="photoStage" hidden title="Click a row once to select it. Double-click to open it. Right-click to go back.">
+      <div class="photo-stage" id="photoStage" hidden title="Click a row once to select it. Click the same row again to open it. Use the Back button on the photo to go back.">
         <img id="photoImg" alt="">
         <div class="photo-miss" id="photoMiss" hidden><div>No photo of this row was captured in the crawls.<br>Use Simulator view for this one — it is labeled, not invented.</div></div>
-        <div class="photo-cap"><span id="photoCapPath"></span><button class="cap-btn" id="photoEnlarge" type="button">⤢ Enlarge photo</button><span class="photo-badge">REAL CAPTURE · YOUR TV</span></div>
+        <div class="photo-cap"><button class="cap-btn" id="photoBack" type="button">← Back</button><span id="photoCapPath"></span><button class="cap-btn" id="photoEnlarge" type="button">⤢ Enlarge photo</button><span class="photo-badge">REAL CAPTURE · REFERENCE TV</span></div>
       </div>
 
       <div class="tv-foot">
         <span id="footSimNote"><strong>Click</strong> to focus &nbsp;•&nbsp; <strong>Click again / Enter</strong> to open &nbsp;•&nbsp; <strong>Toggle</strong> flips in place</span>
-        <span id="footPhotoNote" hidden>Click a row once to select it. Double-click to open it. Right-click to go back.</span>
+        <span id="footPhotoNote" hidden>Click a row once to select it. Click the same row again to open it. Use the Back button on the photo to go back.</span>
         <span id="footPath">Settings</span>
       </div>
 
@@ -629,22 +660,22 @@ html,body{overflow-x:hidden}
       <select class="remote-select" id="remotePicker" aria-label="Choose a remote">
         <optgroup label="Fire TV (6)">
           <option value="fire-01-rc827">RC827 — 06-F47T25-LL006</option>
-          <option value="fire-02-21001-000112">21001-000112</option>
-          <option value="fire-03-g0401-000212">G0401-000212</option>
-          <option value="fire-04-21001-000130">21001-000130</option>
+          <option value="fire-02-21001-000112">21001-000112 — Voice remote, 4 app keys: Prime Video, Netflix, Disney+, Amazon Music</option>
+          <option value="fire-03-g0401-000212">G0401-000212 — Voice remote, 4 app keys: Prime Video, Netflix, Disney+, Amazon Music</option>
+          <option value="fire-04-21001-000130">21001-000130 — Voice remote, app keys: Prime Video, Netflix, APPS, Amazon Music</option>
           <option value="fire-05-rc813">RC813 — G0401-000249</option>
-          <option value="fire-06-21001-000167">21001-000167</option>
+          <option value="fire-06-21001-000167">21001-000167 — Voice remote, 6 app keys: Prime Video, Netflix, Disney+, Amazon Music, TCLtv, APPS</option>
         </optgroup>
         <optgroup label="Google TV and Android TV (9)">
           <option value="gtv-01-rc813-shared">RC813 — 21001-000099 and 21001-000135</option>
-          <option value="gtv-02-21001-000154">21001-000154</option>
+          <option value="gtv-02-21001-000154">21001-000154 — Voice remote, 6 app keys: Netflix, Prime Video, YouTube, TCLtv, Apple TV, Pluto</option>
           <option value="gtv-03-rc802v">RC802V — 06-BTZNYY-SRC802V</option>
-          <option value="gtv-04-21001-000033">21001-000033</option>
+          <option value="gtv-04-21001-000033">21001-000033 — Voice remote, 2 app keys: Netflix, Prime Video</option>
           <option value="gtv-05-rc902n">RC902N — 21001-000022</option>
-          <option value="gtv-06-g0401-000232">G0401-000232</option>
+          <option value="gtv-06-g0401-000232">G0401-000232 — White voice remote, 2 app keys: Netflix, YouTube</option>
           <option value="gtv-07-rc716">RC716 — G0401-000239</option>
           <option value="gtv-08-rc923" selected>RC923 — 21001-000100</option>
-          <option value="gtv-09-21001-000121">21001-000121</option>
+          <option value="gtv-09-21001-000121">21001-000121 — Backlit voice remote, 6 app keys: Netflix, Prime Video, YouTube, TCLtv, Apple TV, Pluto</option>
         </optgroup>
         <optgroup label="Roku TV (7)">
           <option value="roku-01-rc280">RC280 — Netflix, Disney+, Apple TV+, Prime Video</option>
@@ -656,6 +687,7 @@ html,body{overflow-x:hidden}
           <option value="roku-07-rc580pro">RC580 PRO — 21001-000079</option>
         </optgroup>
       </select>
+      <p class="remote-warn" id="remoteWarn" hidden></p>
       <div class="remote-photo-wrap">
         <div class="remote-photo-box" id="remotePhotoBox">
           <img class="remote-photo" id="remotePhoto" src="assets/photos/remote-001.png" alt="Manufacturer photo of remote RC923, code 21001-000100">
@@ -669,25 +701,31 @@ html,body{overflow-x:hidden}
           <button class="remote-hot" type="button" data-key="home" aria-label="Home"></button>
           <button class="remote-hot" type="button" data-key="volup" aria-label="Volume up"></button>
           <button class="remote-hot" type="button" data-key="voldown" aria-label="Volume down"></button>
+          <button class="remote-hot" type="button" data-key="settings" aria-label="Settings (gear)"></button>
+          <button class="remote-hot" type="button" data-key="input" aria-label="Input"></button>
+          <button class="remote-hot" type="button" data-key="mute" aria-label="Mute"></button>
         </div>
       </div>
       <div class="remote-meta" id="remoteMeta">
         <b>RC923</b><br>
         <span>Code: 21001-000100</span><br>
-        <span>Remark: backlite. Suggested replacement in sheet: 21001-000121.</span><br>
+        <span>Remark: Backlit keys. Replacement part: 21001-000121.</span><br>
         <span>App keys: Netflix, Prime Video, YouTube, TCL Channel, TCL Home, Apple TV.</span>
       </div>
       <p class="remote-notused" id="remoteNotUsed">Printed on this remote, for reference (see the button guide below): Input/source, profile, voice, settings, TV/guide, menu, channel, TV Plus, 123, info, and the app keys.</p>
 
       <div class="remote-xkeys" aria-label="More remote keys">
-        <p class="remote-xkeys-label">More keys — tap one to see what it does</p>
+        <p class="remote-xkeys-label">Extra working keys — these drive the TV</p>
         <div class="xkey-row">
           <button class="xkey" type="button" data-x="settings">Settings</button>
           <button class="xkey" type="button" data-x="input">Input</button>
+          <button class="xkey" type="button" data-x="mute">Mute</button>
+        </div>
+        <p class="remote-xkeys-label" style="margin-top:10px">Reference-only keys — what they do on the real remote</p>
+        <div class="xkey-row">
           <button class="xkey" type="button" data-x="voice">Voice</button>
           <button class="xkey" type="button" data-x="menu">Menu</button>
           <button class="xkey" type="button" data-x="options">Options</button>
-          <button class="xkey" type="button" data-x="mute">Mute</button>
         </div>
         <div class="xkey-row" style="margin-top:6px" aria-label="Number keys">
           <button class="xkey xkey-num" type="button" data-num="1">1</button>
@@ -704,14 +742,15 @@ html,body{overflow-x:hidden}
       </div>
 
       <div class="remote-guide" aria-label="What the remote buttons do">
-        <h3>What the buttons do</h3>
+        <details class="remote-guide-details">
+        <summary>What the buttons do — remote button guide (15 keys)</summary>
         <p class="g-sub">Every key you will see on these remotes, in plain words. <b>Works here</b> means the key drives this simulator. <b>Reference</b> means it is explained, but the photo key is not clickable.</p>
         <div class="g-row"><b>Power</b><span>Turns the TV on, or puts it in standby (off).<i class="g-tag works">Works here</i></span></div>
         <div class="g-row"><b>Up / Down / Left / Right</b><span>The direction pad. Moves the highlight around the screen. Left and Right also change sliders and switches. On the Home screen, Right walks the path toward Settings and Left steps back.<i class="g-tag works">Works here</i></span></div>
         <div class="g-row"><b>OK</b><span>The round button in the middle of the direction pad. Opens or confirms whatever is highlighted.<i class="g-tag works">Works here</i></span></div>
         <div class="g-row"><b>Back</b><span>Goes back one screen. Press it again to keep going back.<i class="g-tag works">Works here</i></span></div>
         <div class="g-row"><b>Home</b><span>Jumps straight back to the Google TV Home screen, from anywhere. In this simulator it restarts the path into Settings.<i class="g-tag works">Works here</i></span></div>
-        <div class="g-row"><b>Settings</b><span>The gear button. Opens the Settings menu directly, without going through the Home screen first. Use the Settings key above: it opens Settings here.<i class="g-tag works">Works here</i></span></div>
+        <div class="g-row"><b>Settings</b><span>The gear button. On the real TV it opens the Quick Settings panel first. Then press OK on All settings to open the Settings menu. The Settings key above works the same way here.<i class="g-tag works">Works here</i></span></div>
         <div class="g-row"><b>Menu</b><span>Opens the menu for the screen or app you are in. While watching TV it often brings up quick picture and sound options. Tap Menu above to see this note again.<i class="g-tag ref">Reference</i></span></div>
         <div class="g-row"><b>Options</b><span>Extra choices for whatever is highlighted. On Roku remotes this is the star key. Inside Settings, OK opens the same choices, so use OK here.<i class="g-tag ref">Reference</i></span></div>
         <div class="g-row"><b>Input</b><span>Switches what the TV shows: HDMI 1, HDMI 2, HDMI 3, AV, or live TV. Pick the port the device is plugged into. Use the Input key above: it opens External Inputs here.<i class="g-tag works">Works here</i></span></div>
@@ -721,6 +760,7 @@ html,body{overflow-x:hidden}
         <div class="g-row"><b>Channel up / down</b><span>Moves live TV one channel at a time. Channel keys do nothing inside Settings menus.<i class="g-tag ref">Reference</i></span></div>
         <div class="g-row"><b>Partner buttons</b><span>The branded app keys near the bottom of the remote (Netflix, Prime Video, YouTube, Disney+ and others). Each partner pays for its key. One press opens that app from anywhere. Apps are not part of this simulator.<i class="g-tag ref">Reference</i></span></div>
         <div class="g-row"><b>Number buttons</b><span>0 to 9. On live TV, type a channel number to jump straight to that channel. Numbers also type PINs and codes on entry screens. They are not used inside Settings menus. Tap a number above to see this note again.<i class="g-tag ref">Reference</i></span></div>
+        </details>
       </div>
 
     </div>
@@ -764,6 +804,10 @@ html,body{overflow-x:hidden}
     <p class="note" id="l1Hint">Pick a symptom above to see its step-by-step path, with the words to say at each step.</p>
 
     <div id="l1Guide" hidden>
+      <div class="dirty-banner" id="dirtyBanner" hidden>
+        <span>Settings were changed from defaults.</span>
+        <button class="btn" type="button" id="dirtyReset">Reset to defaults for new call</button>
+      </div>
       <div class="l1-guide-head">
         <div>
           <div class="l1-path" id="l1PathLine"></div>
@@ -782,7 +826,7 @@ html,body{overflow-x:hidden}
 
   <section class="card" id="probingPanel" hidden aria-label="Probing questions">
     <h2>Probing questions</h2>
-    <p>Ask these before you pick a flow, or while you walk one. Each question links to its flow in the TSS tab. Twin state right now: <strong id="probeState">—</strong></p>
+    <p>Ask these before you pick a flow, or while you walk one. Each question links to its flow in the L1 Call Mode tab. Current TV state: <strong id="probeState">—</strong></p>
     <div id="probeList"></div>
   </section>
 
@@ -794,16 +838,12 @@ html,body{overflow-x:hidden}
 
   <section class="card links-review" id="linksPanel" aria-label="Links and review prompt">
     <h2>Links &amp; review</h2>
-    <p class="lr-sub">The links to use, and the old links to avoid, in one place. The live link is the one to share with the team. This preview is a separate build, and the live build does not have this preview's Home start, tabs, or remote photo hotspots yet.</p>
+    <p class="lr-sub">The links to use, and the old links to avoid, in one place. The live link is the one to share with the team.</p>
     <div class="links-list">
       <div class="link-row">
         <b>Live simulator</b>
-        <span>Published build 2026.11.05, the speed-fix build. This is the team link.</span>
+        <span>Published build 2026.11.05-polish2, 299 KB, 205 on-demand photos. This is the team link.</span>
         <a href="https://damaldastcl-dotcom.github.io/tcl-google-tv-simulator/" target="_blank" rel="noopener">damaldastcl-dotcom.github.io/tcl-google-tv-simulator</a>
-      </div>
-      <div class="link-row">
-        <b>This preview</b>
-        <span>Preview build only. It has no public link, so there is nothing here to share. It opens from its preview card in the team chat. Send the team the live link above instead.</span>
       </div>
       <div class="link-row">
         <b>Source repo on GitHub</b>
@@ -847,9 +887,9 @@ Do NOT use these links, they are dead or frozen:
 Context:
 - This is a behavior twin of TCL Google TV Settings menus, built from real photos of a reference TV.
 - Audience: L1 support agents on phone calls, with no TV in front of them. They guide the customer button by button.
-- This live build is 2026.11.05, a speed fix only. The page is 249 KB with 228 photos loading on demand.
-- Do NOT judge it for missing Home start, tabs, or remote photo hotspots. Those are in a separate preview build, not live yet.
-- In the preview build, check that the Home start buttons (Quick Settings panel, then All settings) stay visible and clickable at desktop and phone widths.
+- This live build is 2026.11.05-polish2. The page is 299 KB with 205 photos loading on demand.
+- This build includes Home start, tabs, a Top 10 tab, and remote photo hotspots. Judge it on all of those, because they are live now.
+- Check that the Home start buttons (Quick Settings panel, then All settings) stay visible and clickable at desktop and phone widths.
 - The L1 Say scripts, first questions, and Check lines must be polished, clean, plain English, with every link working. The tool must look polished and clean, because it is a valuable tool for the team.
 
 Critique it on:
@@ -868,13 +908,13 @@ Be specific. Name the screen, the button, and the step where it fails. Do not in
     <button class="foot-link" type="button" data-refopen="refRevalidation">Revalidation</button>
     <button class="foot-link" type="button" data-refopen="refTreeEnds">Where the tree ends</button>
     <button class="foot-link" type="button" id="flowSourcesLink" data-refopen="refFlowSources" hidden>Flow sources</button>
-    <span class="foot-build" id="buildVersion">Build 2026.11.05-polish2</span>
+    <span class="foot-build" id="buildVersion">Build 2026.11.05-polish3</span>
   </footer>
 </div>
 
-<div class="ref-view" id="refCaptures" hidden role="dialog" aria-modal="true" aria-label="Real captures from your TV">
+<div class="ref-view" id="refCaptures" hidden role="dialog" aria-modal="true" aria-label="Real captures from the Reference TV">
   <div class="ref-inner">
-    <div class="ref-head"><h2>Real captures from your TV</h2><button class="btn" type="button" data-refclose>✕ Close</button></div>
+    <div class="ref-head"><h2>Real captures from the Reference TV</h2><button class="btn" type="button" data-refclose>✕ Close</button></div>
     <p>Straight from the crawl folders. Tap one to jump to that screen in Real TV view.</p>
     <div class="gallery" id="gallery"></div>
   </div>
@@ -928,17 +968,22 @@ Be specific. Name the screen, the button, and the step where it fails. Do not in
     <table class="src-table">
       <thead><tr><th scope="col">Flow</th><th scope="col">Source KB article</th></tr></thead>
       <tbody>
-        <tr><td class="src-flow">No power</td><td>TCL TV has no power</td></tr>
-        <tr><td class="src-flow">Black screen, with or without sound</td><td>TCL TV only displays black screen</td></tr>
+        <tr><td class="src-flow">No power</td><td>TCL TV has no power <button class="btn src-copy" type="button" data-kbtitle="TCL TV has no power">Copy KB title</button></td></tr>
+        <tr><td class="src-flow">Black screen, with or without sound</td><td>TCL TV only displays black screen <button class="btn src-copy" type="button" data-kbtitle="TCL TV only displays black screen">Copy KB title</button></td></tr>
         <tr><td class="src-flow">Store mode</td><td><span class="src-gap">No dedicated Google TV article in the KB</span><span class="src-note">Best KB guidance is Home mode or factory reset. The Usage Mode path is model-dependent.</span></td></tr>
-        <tr><td class="src-flow">Cable box or satellite, no signal</td><td>No Video, external devices</td></tr>
-        <tr><td class="src-flow">Lines or bars</td><td>How to Troubleshoot and Validate Reported TV panel issues</td></tr>
-        <tr><td class="src-flow">Remote not working</td><td>Troubleshooting a TCL Google TV Remote Control</td></tr>
-        <tr><td class="src-flow">No sound over ARC or eARC</td><td>ARC/eARC Audio Interruptions, Google TV</td></tr>
+        <tr><td class="src-flow">Cable box or satellite, no signal</td><td>No Video, external devices <button class="btn src-copy" type="button" data-kbtitle="No Video, external devices">Copy KB title</button></td></tr>
+        <tr><td class="src-flow">Lines or bars</td><td>How to Troubleshoot and Validate Reported TV panel issues <button class="btn src-copy" type="button" data-kbtitle="How to Troubleshoot and Validate Reported TV panel issues">Copy KB title</button></td></tr>
+        <tr><td class="src-flow">Input problems</td><td><span class="src-gap">Not in the October 20, 2026 KB mapping</span><span class="src-note">No KB article title is listed for this flow yet.</span></td></tr>
+        <tr><td class="src-flow">Remote not working</td><td>Troubleshooting a TCL Google TV Remote Control <button class="btn src-copy" type="button" data-kbtitle="Troubleshooting a TCL Google TV Remote Control">Copy KB title</button></td></tr>
+        <tr><td class="src-flow">No sound</td><td><span class="src-gap">Not in the October 20, 2026 KB mapping</span><span class="src-note">No KB article title is listed for this flow yet.</span></td></tr>
+        <tr><td class="src-flow">No sound over ARC or eARC</td><td>ARC/eARC Audio Interruptions, Google TV <button class="btn src-copy" type="button" data-kbtitle="ARC/eARC Audio Interruptions, Google TV">Copy KB title</button></td></tr>
         <tr><td class="src-flow">Wi-Fi</td><td><span class="src-gap">KB setup guide only, no will-not-connect troubleshooter</span></td></tr>
-        <tr><td class="src-flow">App crashing or freezing</td><td>How to troubleshoot app related issue on ATV/GTV</td></tr>
-        <tr><td class="src-flow">TV turns off by itself</td><td>Troubleshooting TV Power Issues</td></tr>
-        <tr><td class="src-flow">Missing antenna channels</td><td>Unable to Receive Specific Antenna TV Channels</td></tr>
+        <tr><td class="src-flow">App crashing or freezing</td><td>How to troubleshoot app related issue on ATV/GTV <button class="btn src-copy" type="button" data-kbtitle="How to troubleshoot app related issue on ATV/GTV">Copy KB title</button></td></tr>
+        <tr><td class="src-flow">Picture looks wrong</td><td><span class="src-gap">Not in the October 20, 2026 KB mapping</span><span class="src-note">No KB article title is listed for this flow yet.</span></td></tr>
+        <tr><td class="src-flow">TV turns off by itself</td><td>Troubleshooting TV Power Issues <button class="btn src-copy" type="button" data-kbtitle="Troubleshooting TV Power Issues">Copy KB title</button></td></tr>
+        <tr><td class="src-flow">Missing antenna channels</td><td>Unable to Receive Specific Antenna TV Channels <button class="btn src-copy" type="button" data-kbtitle="Unable to Receive Specific Antenna TV Channels">Copy KB title</button></td></tr>
+        <tr><td class="src-flow">Account sign-in help</td><td><span class="src-gap">Not in the October 20, 2026 KB mapping</span><span class="src-note">No KB article title is listed for this flow yet.</span></td></tr>
+        <tr><td class="src-flow">Check for a system update</td><td><span class="src-gap">Not in the October 20, 2026 KB mapping</span><span class="src-note">No KB article title is listed for this flow yet.</span></td></tr>
         <tr><td class="src-flow">Standard power drain, used across flows</td><td><span class="src-gap">KB-wide standard, not a single article</span></td></tr>
       </tbody>
     </table>
@@ -957,7 +1002,7 @@ Be specific. Name the screen, the button, and the step where it fails. Do not in
 
 <script>
 // Build version: bump this to the ship date on every ship. Shown in the tool footer.
-const BUILD_VERSION = "2026.11.05-polish2";
+const BUILD_VERSION = "2026.11.05-polish3";
 const buildVersionEl = document.getElementById('buildVersion');
 if(buildVersionEl) buildVersionEl.textContent = "Build " + BUILD_VERSION;
 
@@ -1139,8 +1184,8 @@ function deepen(){
   const net = findNode(rootItems, "Network & Internet");
   const guestIdx = net.children.findIndex(x=>x.label==="[connected Wi-Fi network]");
   net.children.splice(guestIdx+1, 0,
-    {label:"Asus2", type:"info", desc:"Secure network"},
-    {label:"Asus5", type:"info", desc:"Secure network"});
+    {label:"Other network 1", type:"info", desc:"Secure network"},
+    {label:"Other network 2", type:"info", desc:"Secure network"});
 
   // Apps: captured row order, and See all apps opens the captured app list
   const apps = findNode(rootItems, "Apps");
@@ -1374,8 +1419,8 @@ function deepen2(){
   seeAllNet.children = [
     {label:"Wi-Fi", type:"toggle", state:"on"},
     {label:"[connected Wi-Fi network]", type:"info", value:"Connected"},
-    {label:"Asus2", type:"info", desc:"Secure network"},
-    {label:"Asus5", type:"info", desc:"Secure network"},
+    {label:"Other network 1", type:"info", desc:"Secure network"},
+    {label:"Other network 2", type:"info", desc:"Secure network"},
     {label:"Add new network", type:"action"}
   ];
 
@@ -1897,7 +1942,7 @@ function applyDependencies(){
   const wifi = net && net.children.find(x=>x.label==="Wi-Fi");
   const woff = !!(wifi && wifi.state!=="on");
   if(net){
-    ["[connected Wi-Fi network]","Asus2","Asus5","See all","Add new network","Check Internet Connection"].forEach(function(l){
+    ["[connected Wi-Fi network]","Other network 1","Other network 2","See all","Add new network","Check Internet Connection"].forEach(function(l){
       setDisabled(net.children.find(x=>x.label===l), woff, "Unavailable while Wi-Fi is off");
     });
   }
@@ -2007,8 +2052,21 @@ function enterSettingsFromHome(opts){
   if(!opts || !opts.noScroll) document.getElementById('tvScreen').scrollIntoView({behavior:'smooth', block:'center'});
 }
 
+// Keyboard hint bar: on the Home path the arrows walk toward Settings, so
+// the hints say that in plain words; everywhere else the default hints apply.
+const hintEl = document.querySelector('.topbar .hint');
+const hintDefaultHTML = hintEl ? hintEl.innerHTML : '';
+function updateHintBar(){
+  if(!hintEl) return;
+  if(homeStep !== null){
+    hintEl.innerHTML = '<span>Right arrow or Down step toward Settings</span><span>•</span><span>Enter open</span><span>•</span><span>Left arrow or Up step back</span>';
+  } else if(hintEl.innerHTML !== hintDefaultHTML){
+    hintEl.innerHTML = hintDefaultHTML;
+  }
+}
 function render(){
   applyDependencies();
+  updateHintBar();
   if(homeStep !== null){ renderHomeStage(); updateLiveCard(); if(window.refreshLiveLines) window.refreshLiveLines(); return; }
   document.getElementById('homeStage').hidden = true;
   document.getElementById('tvScreen').classList.remove('home-on');
@@ -2085,6 +2143,7 @@ function render(){
   renderCatGrid();
   renderPhotoStage();
   updateLiveCard();
+  refreshDirtyBanner();
   if(window.refreshLiveLines) window.refreshLiveLines();
 }
 
@@ -2148,7 +2207,7 @@ function renderPreview(){
   }
   const photo = photoFor(it);
   previewCol.innerHTML = `<div class="preview-card">
-    ${photo?`<figure class="photo-fig"><img src="${photo}" alt="Real TV capture — ${it.label}" loading="lazy" title="Tap to enlarge"><figcaption>Actual capture from your TV · Oct 2026 crawl · tap the photo to enlarge</figcaption></figure>`:''}
+    ${photo?`<figure class="photo-fig"><img src="${photo}" alt="Real TV capture — ${it.label}" loading="lazy" title="Tap to enlarge"><figcaption>Actual capture from the Reference TV · Oct 2026 crawl · tap the photo to enlarge</figcaption></figure>`:''}
     <div class="preview-kicker">${current().title} — Preview</div>
     <div class="preview-title">${it.label}</div>
     ${it.desc?`<p class="preview-desc">${it.desc}</p>`:''}
@@ -2447,6 +2506,11 @@ document.querySelectorAll('[data-key]').forEach(btn=>{
     const k = btn.dataset.key;
     if(k==="power"){ remotePower(); return; }
     if(tvOff) return;
+    if(k==="settings" || k==="input" || k==="mute"){
+      const xb = document.querySelector('[data-x="' + k + '"]');
+      if(xb) xb.click();
+      return;
+    }
     if(homeStep !== null){
       // Direction pad works on the Home path too: Right / Down move forward
       // toward Settings (same as OK), Left / Up step back (same as Back).
@@ -2507,6 +2571,9 @@ function openLightbox(src, cap){
 function closeLightbox(){ lightbox.classList.remove('open'); lbImg.removeAttribute('src'); }
 lightbox.addEventListener('click', e=>{ if(e.target!==lbImg) closeLightbox(); });
 document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('photoBack').addEventListener('click', ()=>{
+  goBack();
+});
 document.getElementById('photoEnlarge').addEventListener('click', ()=>{
   const it = focusedItem();
   openLightbox(photoFor(it), document.getElementById('photoCapPath').textContent);
@@ -2645,35 +2712,16 @@ function photoRowAt(e){
   }
   return idx;
 }
-let stageClickMark = null;
+// Real Capture clicks match Simulator view: one click focuses a row, and a
+// click on the already focused row opens it. No double-click, no right-click
+// needed; the Back button in the photo caption goes back on touch screens.
 document.getElementById('photoStage').addEventListener('click', e=>{
   if(e.target.closest('.photo-cap')) return;
-  const now = Date.now();
-  // the second click of a double click lands here first: leave the open to dblclick
-  if(stageClickMark && now-stageClickMark.t<400 &&
-     Math.abs(e.clientX-stageClickMark.x)<48 && Math.abs(e.clientY-stageClickMark.y)<48){
-    stageClickMark.t = now;
-    return;
-  }
   const idx = photoRowAt(e);
-  stageClickMark = {t:now, x:e.clientX, y:e.clientY, idx:(typeof idx==='number' ? idx : null)};
   if(idx==='legacy'){ activate(focusedItem()); return; }
   if(idx===null || idx===undefined) return;
   if(idx!==focusIdx){ focusIdx = idx; render(); }
-});
-document.getElementById('photoStage').addEventListener('dblclick', e=>{
-  if(e.target.closest('.photo-cap')) return;
-  let idx = null;
-  if(stageClickMark && Date.now()-stageClickMark.t<600 &&
-     Math.abs(e.clientX-stageClickMark.x)<48 && Math.abs(e.clientY-stageClickMark.y)<48){
-    idx = stageClickMark.idx;
-  }
-  if(idx===null || idx===undefined) idx = photoRowAt(e);
-  stageClickMark = null;
-  if(idx==='legacy'){ activate(focusedItem()); return; }
-  if(idx===null || idx===undefined) return;
-  if(idx!==focusIdx){ focusIdx = idx; render(); }
-  activate(focusedItem());
+  else activate(focusedItem());
 });
 document.getElementById('photoStage').addEventListener('contextmenu', e=>{
   e.preventDefault();
@@ -2946,6 +2994,31 @@ function factoryResetFlow(){
   });
 }
 
+// Dirty-state detection for the L1 flow header: a snapshot of every toggle,
+// radio, slider, and select value in the tree. The banner shows only while
+// the live state differs from the captured defaults; nothing auto-resets.
+function stateSnapshot(items){
+  const out = [];
+  (function walk(list, path){
+    (list||[]).forEach(function(it){
+      const p = path + "/" + it.label;
+      if(it.type==="toggle" || it.type==="radio") out.push(p + "=" + (it.state || ""));
+      else if(it.type==="slider") out.push(p + "=" + (it._val ?? 50));
+      else if(it.type==="select") out.push(p + "=" + (it.value || ""));
+      if(it.children) walk(it.children, p);
+    });
+  })(items, "");
+  return out.join("|");
+}
+let defaultSnapshot = null;
+function isStateDirty(){
+  if(defaultSnapshot === null) return false;
+  try{ return stateSnapshot(rootItems) !== defaultSnapshot; }catch(e){ return false; }
+}
+function refreshDirtyBanner(){
+  const b = document.getElementById('dirtyBanner');
+  if(b) b.hidden = !isStateDirty();
+}
 function doResetDefaults(){
   homeStep = null;
   rootItems = buildTree();
@@ -2956,14 +3029,18 @@ function doResetDefaults(){
   showToast("Simulator reset to the captured defaults — clean state for the next call");
 }
 function confirmResetDefaults(){
-  openDialog(`<h3>Reset to defaults?</h3><p>Every toggle, slider, picture value, and scan result in the simulator goes back to the captured state of your TV: HDMI Control on, eARC on, Audio Output on Auto (Internal Speaker), Wi-Fi and Bluetooth on. Nothing on the real TV is touched.</p><div class="dialog-actions"><button class="btn" onclick="closeDialog()">Cancel</button><button class="btn primary" id="dlgResetDef">Reset to defaults</button></div>`);
+  openDialog(`<h3>Reset to defaults?</h3><p>Every toggle, slider, picture value, and scan result in the simulator goes back to the captured state of the Reference TV: HDMI Control on, eARC on, Audio Output on Auto (Internal Speaker), Wi-Fi and Bluetooth on. Nothing on the real TV is touched.</p><div class="dialog-actions"><button class="btn" onclick="closeDialog()">Cancel</button><button class="btn primary" id="dlgResetDef">Reset to defaults</button></div>`);
   document.getElementById('dlgResetDef').addEventListener('click', doResetDefaults);
 }
 document.getElementById('resetTop').addEventListener('click', confirmResetDefaults);
 const resetL1Btn = document.getElementById('resetL1');
 if(resetL1Btn) resetL1Btn.addEventListener('click', confirmResetDefaults);
+const dirtyResetBtn = document.getElementById('dirtyReset');
+if(dirtyResetBtn) dirtyResetBtn.addEventListener('click', confirmResetDefaults);
 
 setView('sim');
+defaultSnapshot = stateSnapshot(rootItems);
+refreshDirtyBanner();
 </script>
 <script>
 // ---- L1 Call Mode: symptom paths, read-aloud scripts, follow-along ----
@@ -4046,7 +4123,7 @@ function buildProbing(){
     steps.forEach(function(st){
       html += '<div class="probe-q"><b>' + st.screen + '</b><p class="check">' + st.check + '</p></div>';
     });
-    html += '<button class="btn primary" type="button" data-probeflow="' + sym.id + '">Open this flow in TSS →</button></div>';
+    html += '<button class="btn primary" type="button" data-probeflow="' + sym.id + '">Open this flow in L1 Call Mode →</button></div>';
   });
   list.innerHTML = html;
   list.querySelectorAll('[data-probeflow]').forEach(function(b){
@@ -4068,6 +4145,19 @@ function setTab(name){
 document.querySelectorAll('.tabbar button').forEach(function(b){ b.addEventListener('click', function(){ setTab(b.dataset.tab); }); });
 buildProbing();
 setTab('nav');
+// Initialise the Probing readout on load instead of leaving the placeholder
+// dash, and keep it following the twin state on every render
+// (refreshLiveLines runs at the end of render()).
+(function(){
+  const ps = document.getElementById('probeState');
+  if(ps) ps.textContent = probeStateText();
+  const origRefresh = window.refreshLiveLines;
+  window.refreshLiveLines = function(){
+    if(origRefresh) origRefresh();
+    const el = document.getElementById('probeState');
+    if(el) el.textContent = probeStateText();
+  };
+})();
 </script>
 <script>
 // ---- Remote picker (build 2026.11.02-home, gap 2): 22 manufacturer photos from
@@ -4214,7 +4304,7 @@ const REMOTE_PICKER = [
   "group": "Google TV and Android TV",
   "name": "RC923",
   "code": "21001-000100",
-  "remark": "backlite. Suggested replacement in sheet: 21001-000121.",
+  "remark": "Backlit keys. Replacement part: 21001-000121.",
   "variant": "App keys: Netflix, Prime Video, YouTube, TCL Channel, TCL Home, Apple TV.",
   "photo": "assets/photos/remote-001.png",
   "notused": "Input/source, profile, voice, settings, TV/guide, menu, channel, TV Plus, 123, info, and the app keys."
@@ -4224,7 +4314,7 @@ const REMOTE_PICKER = [
   "group": "Google TV and Android TV",
   "name": "(no RC name in sheet)",
   "code": "21001-000121",
-  "remark": "backlite. This is the suggested replacement for RC923 21001-000100.",
+  "remark": "Backlit keys. This is the suggested replacement for RC923 21001-000100.",
   "variant": "App keys: Netflix, Prime Video, YouTube, TCLtv, Apple TV, pluto. Note the different app row from RC923.",
   "photo": "assets/photos/remote-015.png",
   "notused": "Input/source, profile, voice, settings, TV/guide, menu, channel, TV Plus, 123, info, and the app keys."
@@ -4321,7 +4411,7 @@ const REMOTE_HOTSPOTS = {
  "gtv-05-rc902n": {power:[685,50],up:[500,234],down:[500,331],left:[350,282],right:[650,282],ok:[500,282],back:[315,393],home:[500,393],volup:null,voldown:null},
  "gtv-06-g0401-000232": {power:[675,83],up:[500,283],down:[500,437],left:[382,360],right:[618,360],ok:[500,360],back:[324,517],home:[499,517],volup:null,voldown:null},
  "gtv-07-rc716": {power:[708,60],up:[500,438],down:[500,593],left:[300,515],right:[700,515],ok:[500,518],back:[290,633],home:[500,633],volup:[290,693],voldown:[290,743]},
- "gtv-08-rc923": {power:[787,104],up:[498,236],down:[498,423],left:[322,332],right:[678,332],ok:[501,336],back:[334,472],home:[500,472],volup:[337,556],voldown:[338,640]},
+ "gtv-08-rc923": {power:[787,104],up:[498,236],down:[498,423],left:[322,332],right:[678,332],ok:[501,336],back:[334,472],home:[500,472],volup:[337,556],voldown:[338,640],settings:[825,142],input:[185,57],mute:[505,547]},
  "gtv-09-21001-000121": {power:[600,40],up:[500,198],down:[500,313],left:[390,253],right:[610,253],ok:[500,255],back:[400,368],home:[500,368],volup:[400,443],voldown:[400,533]},
  "roku-01-rc280": {power:[500,73],up:[500,292],down:[500,492],left:[323,393],right:[677,393],ok:[500,393],back:[300,170],home:[700,170],volup:null,voldown:null},
  "roku-02-rc280": {power:[478,83],up:[500,310],down:[500,520],left:[313,415],right:[688,415],ok:[500,415],back:[335,193],home:[665,193],volup:null,voldown:null},
@@ -4344,6 +4434,19 @@ const REMOTE_HOTSPOTS = {
     img.alt = 'Manufacturer photo of remote ' + r.name + ', code ' + r.code;
     meta.innerHTML = '<b>' + esc(r.name) + '</b><br><span>Code: ' + esc(r.code) + '</span><br><span>Remark: ' + esc(r.remark) + '</span><br><span>' + esc(r.variant) + '</span>';
     notUsed.textContent = 'Printed on this remote, for reference (see the button guide below): ' + r.notused;
+    const warn = document.getElementById('remoteWarn');
+    if(warn){
+      if(r.group === 'Fire TV'){
+        warn.hidden = false;
+        warn.textContent = 'Warning: this is a Fire TV remote. Fire TV TVs use different Settings menus than Google TV. Confirm the customer’s TV is a Google TV before guiding them with this tool.';
+      } else if(r.group === 'Roku TV'){
+        warn.hidden = false;
+        warn.textContent = 'Warning: this is a Roku TV remote. Roku TVs use different Settings menus than Google TV, and Roku remotes have no Settings gear key and no Input key. Confirm the customer’s TV is a Google TV before guiding them with this tool.';
+      } else {
+        warn.hidden = true;
+        warn.textContent = '';
+      }
+    }
     const spots = REMOTE_HOTSPOTS[r.id] || REMOTE_HOTSPOTS['gtv-08-rc923'];
     document.querySelectorAll('.remote-hot').forEach(function(b){
       const pos = spots[b.dataset.key];
@@ -4371,7 +4474,12 @@ const REMOTE_HOTSPOTS = {
   }
   function xSettings(){
     if(guard()) return;
-    if(homeStep !== null){ enterSettingsFromHome(); showToast("Settings — opened with the Settings key"); return; }
+    // On the real TV the gear key opens the Quick Settings panel first;
+    // OK on All settings is what enters Settings. From Home, gear lands on
+    // the panel (homeStep 1). What gear does from inside Settings is
+    // unrecorded, so that path keeps its existing behaviour below.
+    if(homeStep === 0){ homeStep = 1; render(); showToast("Quick Settings panel — press OK on All settings to open Settings"); return; }
+    if(homeStep === 1){ showToast("Quick Settings is already open — press OK on All settings to open Settings"); return; }
     stack = [{title:"Settings", section:"GENERAL SETTINGS", items: rootItems}];
     focusIdx = 0;
     closeDialog();
@@ -4431,6 +4539,33 @@ const REMOTE_HOTSPOTS = {
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(text).then(copied, function(){ execCopy(text); });
     } else execCopy(text);
+  });
+})();
+</script>
+<script>
+// ---- Flow sources: one-click Copy KB title per row. Copies the article
+// title only; no Helpjuice URLs are stored in this tool, so none are linked.
+(function(){
+  var table = document.querySelector('#refFlowSources .src-table');
+  if(!table) return;
+  function done(text){
+    if(typeof showToast === 'function') showToast('KB title copied: ' + text);
+  }
+  function fallback(text){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(text); }
+    catch(err){ if(typeof showToast === 'function') showToast('Copy did not work here. Copy the title by hand.'); }
+    document.body.removeChild(ta);
+  }
+  table.addEventListener('click', function(e){
+    var b = e.target.closest('[data-kbtitle]');
+    if(!b) return;
+    var text = b.getAttribute('data-kbtitle');
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ done(text); }, function(){ fallback(text); });
+    } else fallback(text);
   });
 })();
 </script>
